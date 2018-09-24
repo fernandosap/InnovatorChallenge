@@ -1,0 +1,6 @@
+---
+applications:
+- name: HolyMotion
+  memory: 512M
+  instances: 2
+  command: node app.js
