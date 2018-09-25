@@ -50,6 +50,11 @@ app.get('/Signin', function(req,res){
 	res.render('signup')
 });
 
+app.post('/SignUp', function(req,res){
+	array = req.body.signup_array
+	// crear post en odata
+});
+
 app.post('/validarLogin', function(req,res){
 	console.log("Imprimiendo información");
 	email = req.body.email;
