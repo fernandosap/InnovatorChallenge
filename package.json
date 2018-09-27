@@ -2,7 +2,7 @@
   "name": "innovator_challenge",
   "version": "1.0.0",
   "description": "Aplicacion del concurso de Innovator Challenge",
-  "main": "app.js",
+  "main": "HolyMotion.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -20,12 +20,14 @@ function SignUp(){
 
     $.post( "/SignUp",{signup_array:signup_array}, function(result) {
       try{
-      if(result.exists == true){
+      if(result.resultado == "existente"){
         alert("The user is already created, try logging in");
         $( location ).attr("href", '/');
-      } else {
+      } else if(result.resultado == "nuevo") {
         alert("The user has been created successfully, you can login now");
         $( location ).attr("href", '/');
+      } else {
+        alert("Hubo un error en la creación del usuario, inténtelo de nuevo");
       }
     } catch (e){
       alert(e);
