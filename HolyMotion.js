@@ -144,7 +144,11 @@ app.post('/validarLogin', function(req,res){
 	});
 });
 
-function usuarioExists(email){
-	
-};
+app.post('/contarSpots',function(req,res){
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots"
+	o(url).get(function(data) {
+				numero_nuevo = Number(data.d.results.length);
+				res.send({"contador":numero_nuevo,"spots":data});
+	});
+});
 
