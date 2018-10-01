@@ -2,6 +2,7 @@ console.log("JS Conectado");
 var map, marker
 var cantidad_spots;
 miStorage = window.localStorage;
+var usuario = JSON.parse(miStorage.user)
 
 var markers = [];
 var contentString = [];
@@ -59,15 +60,51 @@ if (navigator.geolocation) {
           position: pos2,
           map: map,
           icon:image,
-          id_marker: spots[i].ID_SPOT
+          id_marker: spots[i].ID_SPOT,
+          direccion: spots[i].DIRECCION
         });
 
       };
 
       for(x=0;x<markers.length;x++){
         google.maps.event.addListener(markers[x], 'click', function() {
+          var marcador = this;
+          console.log(marcador);
           infowindow.setContent(infoMensaje(this));
           infowindow.open(map, this);
+          // Agregando información al modal 
+          $("#botonReservar").click(function () {
+            $("#tituloModal").text(marcador.direccion);
+          });
+
+          $("#botonConfirmarReserva").click(function(){
+              // Hacer un post a la tabla de hana para guardar la reserva, pasando ID de lugar, fecha y hora.
+              var info = {
+               "ID_SPOT": marcador.id_marker,
+               "ID_USUARIO_RESERVA": usuario.ID_USUARIO,
+               "FECHA_INICIO": $("#fecha_inicio").val(),
+               "FECHA_FIN": $("#fecha_fin").val(),
+               "HORA_INICIO": $("#hora_inicio").val(),
+               "HORA_FIN": $("#hora_fin").val()
+               };
+
+               var mensaje = ""; 
+
+              $.post( "/crearReserva",info,function(result) {
+                resultado = result.resultado;
+                console.log(result.resultado);
+                console.log(result.id_reserva);
+                if (resultado == "success"){
+                  mensaje = "Tu reserva se realizó de manera exitosa. <p> El id de tu reserva es: " + result.id_reserva + "</p>"
+                } else {
+                  mensaje = "Hubo un error en tu reservación. Inténtalo de nuevo más tarde."
+                }
+                console.log("Se realizó el post satisfactoriamente.");
+                $("#exampleModal").modal('hide');
+                $("#MensajeModalConfirmacion").html(mensaje);
+                $("#modalConfirmacion").modal('show');
+              });
+          });
         });
       };
 
@@ -86,15 +123,15 @@ function infoMensaje(marker){
   mensaje = '<div class="text-center" id="content">'+
           '<div id="siteNotice">'+
           '</div>'+
-          '<h2 id="firstHeading" class="firstHeading">Cuajimalpa 132</h2>'+
+          '<h2 id="firstHeading" class="firstHeading">'+marker.direccion+'</h2>'+
           '<div id="bodyContent">'+
           '<p><b>Status:</b> Available</p>'+
           '<p><b>Owner:</b> Jonathan Aguilar</p>'+
           '<p><b>Cost per hour:</b> $2</p>'+
           '<p><b>Time to get there:</b> 3 min</p>'+
-          '<p><button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModal">Reserve Spot!</button></p>'+
-          '<p>id_spot: '+ marker.id_marker + '</p>'+
+          '<p><button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModal" id="botonReservar">Reserve Spot!</button></p>'+
+          // '<p>id_spot: '+ marker.id_marker + '</p>'+
           '</div></div>'
           ;
   return mensaje;
-}
+};

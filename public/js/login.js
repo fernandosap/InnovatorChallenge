@@ -1,5 +1,6 @@
 console.log("JS Conectado");
 var resultado_login;
+var usuario;
 miStorage = window.localStorage;
 
 // $("#loginbutton").on('click',function(){
@@ -22,7 +23,8 @@ function Login(){
       if(result.login == false){
         alert("Wrong user or password");
       } else {
-        miStorage.user = JSON.stringify(result.user);
+        usuario = result.user;
+        miStorage.user = JSON.stringify(usuario);
         $( location ).attr("href", '/bienvenido');
       }
     } catch (e){

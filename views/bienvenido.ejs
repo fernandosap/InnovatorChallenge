@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href="/css/bienvenido.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 
   </head>
@@ -52,17 +54,50 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="tituloModal">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+        <div class="text-center"> 
+          <p><b>Pick the date and time you would like to reserve </b></p>
+          <p>Start date: </p>
+          <p><input type="date" name="fecha_inicio" id="fecha_inicio"/></p>
+          <p>Start time: </p>
+          <p><input type="time" name="hora_inicio" id="hora_inicio"/></p>
+          <p>End date: </p>
+          <p><input type="date" name="fecha_fin" id="fecha_fin"/></p>
+          <p>End time: </p>
+          <p><input type="time" name="hora_fin" id="hora_fin"/></p>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" id="botonConfirmarReserva" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal de confirmación de reserva -->
+
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal">Congratulations!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center" id="MensajeModalConfirmacion"> 
+          <p><b>Your resevation has been succesfully saved. </b></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -81,3 +116,6 @@
 async defer></script>
 
 <script type="text/javascript" src="/js/bienvenido.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>

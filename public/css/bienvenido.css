@@ -11,3 +11,8 @@ html, body {
 .btn{
 	color:white !important;
 }
+
+#Reservdatetime{
+	text-align: center !important;
+	width: 250px !important;
+}

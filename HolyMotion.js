@@ -65,7 +65,7 @@ app.post('/SignUp', function(req,res){
 				ID_LUGAR: data.d.results[0].ID_LUGAR,
 				DIRECCION: data.d.results[0].DIRECCION,
 				EMAIL: data.d.results[0].EMAIL
-			}
+			};
 			respuesta = {"existe":true,user:user};
 			console.log("usuario existe: " + respuesta.existe);
 		} else {
@@ -121,11 +121,12 @@ app.post('/validarLogin', function(req,res){
 	o(url).get(function(data) {
 		if(typeof data.d.results[0] !== 'undefined'){
 			var user = {
-				NOMBRE: data.d.results[0].NOMBRE,
-				APELLIDO: data.d.results[0].APELLIDO,
-				ID_LUGAR: data.d.results[0].ID_LUGAR,
-				DIRECCION: data.d.results[0].DIRECCION,
-				EMAIL: data.d.results[0].EMAIL
+				"ID_USUARIO": data.d.results[0].ID_USUARIO,
+				"NOMBRE": data.d.results[0].NOMBRE,
+				"APELLIDO": data.d.results[0].APELLIDO,
+				"ID_LUGAR": data.d.results[0].ID_LUGAR,
+				"DIRECCION": data.d.results[0].DIRECCION,
+				"EMAIL": data.d.results[0].EMAIL
 			}
 			console.log(data.d.results[0]);
 			if(pass == data.d.results[0].PASSWORD){
@@ -144,11 +145,43 @@ app.post('/validarLogin', function(req,res){
 	});
 });
 
+app.post('/crearReserva',function(req,res){
+	var numero_nuevo = 0;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+	o(url).get(function(data) {
+		numero_nuevo = Number(data.d.results.length);
+		info = {
+			ID_RESERVA: numero_nuevo+1,
+			ID_SPOT: Number(req.body.ID_SPOT),
+			ID_USUARIO_RESERVA: Number(req.body.ID_USUARIO_RESERVA),
+			FECHA_INICIO: req.body.FECHA_INICIO,
+			FECHA_FIN: req.body.FECHA_FIN,
+			HORA_INICIO: req.body.HORA_INICIO,
+			HORA_FIN: req.body.HORA_FIN,
+			ESTATUS: "Pendiente"
+		}
+		o(url).post(info).save(function(data){
+			res.send({"resultado":"success","id_reserva":data.d.ID_RESERVA});  
+		}, function(status, error){
+			console.error(status + " " + error);
+			res.send({"resultado":"error"});  
+		});
+	});	
+});
+
 app.post('/contarSpots',function(req,res){
 	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots"
 	o(url).get(function(data) {
 				numero_nuevo = Number(data.d.results.length);
 				res.send({"contador":numero_nuevo,"spots":data});
+	});
+});
+
+app.post('/nuevoIDReserva',function(req,res){
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas"
+	o(url).get(function(data) {
+				numero_nuevo = Number(data.d.results.length);
+				res.send({"ultima_reserva":numero_nuevo,"reservas":data});
 	});
 });
 
