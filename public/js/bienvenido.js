@@ -7,7 +7,9 @@ var usuario = JSON.parse(miStorage.user)
 var markers = [];
 var contentString = [];
 
-var test = ["Jonathan","Fernando","Bruno"];
+var coches = [];
+var info;
+var test ;
 
 function initMap() {
 map = new google.maps.Map(document.getElementById('map'), {
@@ -32,7 +34,7 @@ if (navigator.geolocation) {
       };
 
       var image = {
-          url: "circulo_Verde3.png",
+          url: "circulo_verde3.png",
           scaledSize: new google.maps.Size(30, 30)
         };
 
@@ -67,6 +69,8 @@ if (navigator.geolocation) {
       };
 
       for(x=0;x<markers.length;x++){
+        var placaSeleccionada = "";
+        var id_coche_seleccionado;
         google.maps.event.addListener(markers[x], 'click', function() {
           var marcador = this;
           console.log(marcador);
@@ -75,20 +79,41 @@ if (navigator.geolocation) {
           // Agregando información al modal 
           $("#botonReservar").click(function () {
             $("#tituloModal").text(marcador.direccion);
-          });
+            $.post("/consultarVehiculos",{usuario:usuario.ID_USUARIO},function(result){
+              if(result.resultado.existe==true){
+                console.log(result.resultado.vehiculos);
+                coches = result.resultado.vehiculos;
+                for(var i = 0; i<coches.length; i++){
+                  coche_desc = coches[i].MARCA + ' ' + coches[i].ANIO + ' ' + coches[i].PLACA;
+                  $("#dropdownVehiculos").append("<a class='dropdown-item' href='#' title='" + coches[i].ID_VEHICULO + "' name='" + coches[i].PLACA + "' id='cocheOpcion" + (i+1) + "'>" + coche_desc + "</a>");
+                  $("#cocheOpcion" + (i+1)).on('click', function(){
+                    coche = this.text;
+                    placaSeleccionada = this.name;
+                    $("#dropdownMenuButton").text(coche);
+                  });
+                };
+              } else {
+                $("#dropdownVehiculos").append("<a class='dropdown-item' href='#''> Sin vehículos registrados </a>");
+              }
+              console.log("resultado vehículo " + String(result.resultado.existe));
+            });
 
-          $("#botonConfirmarReserva").click(function(){
+            $("#botonConfirmarReserva").click(function(){
               // Hacer un post a la tabla de hana para guardar la reserva, pasando ID de lugar, fecha y hora.
-              var info = {
+              info = {
                "ID_SPOT": marcador.id_marker,
+               "UBICACION_DESC": marcador.direccion,
                "ID_USUARIO_RESERVA": usuario.ID_USUARIO,
                "FECHA_INICIO": $("#fecha_inicio").val(),
                "FECHA_FIN": $("#fecha_fin").val(),
                "HORA_INICIO": $("#hora_inicio").val(),
-               "HORA_FIN": $("#hora_fin").val()
+               "HORA_FIN": $("#hora_fin").val(),
+               "PLACA": placaSeleccionada
                };
 
                var mensaje = ""; 
+
+               console.log(info);
 
               $.post( "/crearReserva",info,function(result) {
                 resultado = result.resultado;
@@ -103,7 +128,10 @@ if (navigator.geolocation) {
                 $("#exampleModal").modal('hide');
                 $("#MensajeModalConfirmacion").html(mensaje);
                 $("#modalConfirmacion").modal('show');
+                infowindow.close();
               });
+          });
+
           });
         });
       };

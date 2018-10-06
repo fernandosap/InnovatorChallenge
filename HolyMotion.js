@@ -49,6 +49,51 @@ app.get('/Signin', function(req,res){
 	res.render('signup')
 });
 
+app.post('/consultarVehiculos',function(req,res){
+	usuario = req.body.usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + usuario;
+	o(url).get(function(data){
+		if(typeof data.d.results[0] !== 'undefined'){
+			console.log(data.d.results);
+			respuesta = ({"vehiculos":data.d.results,"existe":true});
+			res.send({"resultado": respuesta});
+		} else {
+			respuesta = ({"existe":false});
+			res.send({"resultado": respuesta});
+		};
+	});
+});
+
+app.post('/consultarReservas',function(req,res){
+id_usuario = req.body.id_usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_USUARIO_RESERVA eq " + id_usuario
+	o(url).get(function(data){
+		reservas = data.d.results;
+		console.log(reservas);
+		res.send({"reservas":reservas});
+	})
+});
+
+app.post('/consultarReservasPorSpot',function(req,res){
+id_usuario = req.body.spot_id;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_USUARIO_RESERVA eq " + id_usuario
+	o(url).get(function(data){
+		reservas = data.d.results;
+		console.log(reservas);
+		res.send({"reservas":reservas});
+	})
+});
+
+app.post('/consultarSpots',function(req,res){
+	id_usuario = req.body.id_usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$filter=ID_USUARIO eq " + id_usuario
+	o(url).get(function(data){
+		spots = data.d.results;
+		console.log(spots);
+		res.send({"spots":spots});
+	})
+})
+
 app.post('/SignUp', function(req,res){
 	array = req.body.signup_array;
 	email = array[2];
@@ -158,8 +203,11 @@ app.post('/crearReserva',function(req,res){
 			FECHA_FIN: req.body.FECHA_FIN,
 			HORA_INICIO: req.body.HORA_INICIO,
 			HORA_FIN: req.body.HORA_FIN,
+			UBICACION_DESC: req.body.UBICACION_DESC,
+			PLACA: req.body.PLACA,
 			ESTATUS: "Pendiente"
 		}
+		console.log(info);
 		o(url).post(info).save(function(data){
 			res.send({"resultado":"success","id_reserva":data.d.ID_RESERVA});  
 		}, function(status, error){
@@ -185,3 +233,14 @@ app.post('/nuevoIDReserva',function(req,res){
 	});
 });
 
+app.post('/obtenerImagenesUsuario', function(req,res){
+	id_usuario = req.body.id_usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=ID_USUARIO eq " + id_usuario
+	o(url).get(function(data){
+		usuario = data.d.results[0];
+		console.log(usuario);
+		foto1 = usuario.IMAGEN_1;
+		foto2 = usuario.IMAGEN_2;
+		res.send({"foto1":foto1,"foto2":foto2});
+	})
+})

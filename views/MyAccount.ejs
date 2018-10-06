@@ -50,50 +50,34 @@
   <div class="row">
     <div class="col-lg-3">
       <span id="foto">
-      <img class="rounded-circle" src="jonathan.jpg" alt="Generic placeholder image" width="140" height="140">
+      <img class="rounded-circle" src="" id="ImagenUsuario" alt="Generic placeholder image" width="140" height="140">
       </span>
-            <h3>Jonathan Alejandro Aguilar Morales</h3>
-            <p>Jonathan.aguilar@sap.com</p>
-            <p><i class="fas fa-chess-king"></i>  Master Driver</span></p>
-            <p>800 pts</p>
+            <h3><span id="NombreUsuario">Jonathan Alejandro Aguilar Morales</span></h3>
+            <p id="CorreoUsuario">Jonathan.aguilar@sap.com</p>
+            <p id="NivelUsuario"><i class="fas fa-chess-king"></i>  Master Driver</span></p>
+            <p id="PuntosUsuario">800 pts</p>
     </div>
     <div class="col-lg-9">
         <h3>Reservations</h3>
 
         <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-hover" id="tabla_reservas">
           <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">ID</th>
               <th scope="col">Place</th>
-              <th scope="col">Date</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
               <th scope="col">From</th>
               <th scope="col">To</th>
               <th scope="col">Cost</th>
+              <th scope="col">Car Plates</th>
               <th scope="col">Status</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1</th>
-              <td>Cuajimalpa, Cajón 26</td>
-              <td>19/09/2018</td>
-              <td>14:15</td>
-              <td>14:35</td>
-              <td>$20</td>
-              <td>Accepted</td>
-              <td><p><a class="btn btn-danger" target="_blank" href="#"" role="button">Delete</a></td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Santa Fe, Cajón 28</td>
-              <td>20/09/2018</td>
-              <td>12:00</td>
-              <td>12:05</td>
-              <td>$5</td>
-              <td>Pending</td>
-              <td><p><a class="btn btn-danger" target="_blank" href="#" role="button">Delete</a></td>
             </tr>
           </tbody>
         </table>
@@ -157,6 +141,12 @@
             </tr>
           </tbody>
         </table>
+
+
+        <br>
+        <h3>My Vehicles</h3>
+        <br>
+
         </div>
 
     </div>
@@ -165,6 +155,13 @@
 
   </body>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="/js/MyAccount.js"></script>
