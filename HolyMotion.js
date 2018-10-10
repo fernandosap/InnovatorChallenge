@@ -109,49 +109,53 @@ app.post('/EliminarObjeto', function(req, res){
 
 app.post('/CrearSpot', function(req,res){
 	// id de vehiculo, id de usuario, marca, anio, placa y el color
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots";
-	console.log(req.body);
-	o(url).get(function(data) {
-		numero_nuevo = Number(data.d.results.length) + 1;
-		info = {
-			"ID_SPOT": numero_nuevo,
-			"ID_USUARIO": Number(req.body.ID_USUARIO),
-			"DIRECCION": req.body.DIRECCION
-		};
-		console.log(info);
-		o(url).post(info).save(function(data){
-			console.log("Información agregada satisfactoriamente");
-			res.send({"resultado":"success"});  
-		}, function(status, error){
-			console.error(status + " " + error);
-			res.send({"resultado":"error"});  
-		});
+	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$select=ID_SPOT&$orderby=ID_SPOT%20desc&$top=1"
+	o(url2).get(function(data){
+		console.log(data.d.results[0].ID_SPOT);
+		numero_nuevo = Number(data.d.results[0].ID_SPOT) + 1;
+		console.log(numero_nuevo);
+		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots";
+			info = {
+				"ID_SPOT": numero_nuevo,
+				"ID_USUARIO": Number(req.body.ID_USUARIO),
+				"DIRECCION": req.body.DIRECCION
+			};
+			console.log(info);
+			o(url).post(info).save(function(data){
+				console.log("Información agregada satisfactoriamente");
+				res.send({"resultado":"success"});  
+			}, function(status, error){
+				console.error(status + " " + error);
+				res.send({"resultado":"error"});  
+			});
 	});
 });
 
 app.post('/CrearCoche', function(req,res){
-	// id de vehiculo, id de usuario, marca, anio, placa y el color
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos";
-	console.log(req.body.info);
-	o(url).get(function(data) {
-		numero_nuevo = Number(data.d.results.length) + 1;
-		info = {
-			"ID_VEHICULO": numero_nuevo,
-			"ID_USUARIO": Number(req.body.info.ID_USUARIO),
-			"MARCA": req.body.info.MARCA,
-			"ANIO": req.body.info.ANIO,
-			"PLACA": req.body.info.PLACA,
-			"COLOR": req.body.info.COLOR_COCHE 
-		};
-		console.log(info);
-		o(url).post(info).save(function(data){
-			console.log("Información agregada satisfactoriamente");
-			res.send({"resultado":"success"});  
-		}, function(status, error){
-			console.error(status + " " + error);
-			res.send({"resultado":"error"});  
-		});
+	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$select=ID_VEHICULO&$orderby=ID_VEHICULO%20desc&$top=1"
+	o(url2).get(function(data){
+		console.log(data.d.results[0].ID_VEHICULO);
+		numero_nuevo = Number(data.d.results[0].ID_VEHICULO) + 1;
+		console.log(numero_nuevo);
+		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos";
+			info = {
+				"ID_VEHICULO": numero_nuevo,
+				"ID_USUARIO": Number(req.body.info.ID_USUARIO),
+				"MARCA": req.body.info.MARCA,
+				"ANIO": req.body.info.ANIO,
+				"PLACA": req.body.info.PLACA,
+				"COLOR": req.body.info.COLOR_COCHE 
+			};
+			console.log(info);
+			o(url).post(info).save(function(data){
+				console.log("Información agregada satisfactoriamente");
+				res.send({"resultado":"success"});  
+			}, function(status, error){
+				console.error(status + " " + error);
+				res.send({"resultado":"error"});  
+			});
 	});
+	// id de vehiculo, id de usuario, marca, anio, placa y el color
 });
 
 app.post('/consultarReservas',function(req,res){
@@ -282,30 +286,37 @@ app.post('/validarLogin', function(req,res){
 });
 
 app.post('/crearReserva',function(req,res){
-	var numero_nuevo = 0;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
-	o(url).get(function(data) {
-		numero_nuevo = Number(data.d.results.length);
-		info = {
-			ID_RESERVA: numero_nuevo+1,
-			ID_SPOT: Number(req.body.ID_SPOT),
-			ID_USUARIO_RESERVA: Number(req.body.ID_USUARIO_RESERVA),
-			FECHA_INICIO: req.body.FECHA_INICIO,
-			FECHA_FIN: req.body.FECHA_FIN,
-			HORA_INICIO: req.body.HORA_INICIO,
-			HORA_FIN: req.body.HORA_FIN,
-			UBICACION_DESC: req.body.UBICACION_DESC,
-			PLACA: req.body.PLACA,
-			ESTATUS: "Pendiente"
-		}
-		console.log(info);
-		o(url).post(info).save(function(data){
-			res.send({"resultado":"success","id_reserva":data.d.ID_RESERVA});  
-		}, function(status, error){
-			console.error(status + " " + error);
-			res.send({"resultado":"error"});  
-		});
-	});	
+	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$select=ID_RESERVA&$orderby=ID_RESERVA%20desc&$top=1"
+
+	o(url2).get(function(data){
+		if(typeof data.d.results[0] == 'undefined'){
+			numero_nuevo = 1;
+		} else {
+			console.log(data.d.results[0].ID_RESERVA);
+			numero_nuevo = Number(data.d.results[0].ID_RESERVA) + 1;
+			console.log(numero_nuevo);
+		};
+		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+			info = {
+				ID_RESERVA: numero_nuevo,
+				ID_SPOT: Number(req.body.ID_SPOT),
+				ID_USUARIO_RESERVA: Number(req.body.ID_USUARIO_RESERVA),
+				FECHA_INICIO: req.body.FECHA_INICIO,
+				FECHA_FIN: req.body.FECHA_FIN,
+				HORA_INICIO: req.body.HORA_INICIO,
+				HORA_FIN: req.body.HORA_FIN,
+				UBICACION_DESC: req.body.UBICACION_DESC,
+				PLACA: req.body.PLACA,
+				ESTATUS: "Pending"
+			}
+			console.log(info);
+			o(url).post(info).save(function(data){
+				res.send({"resultado":"success","id_reserva":data.d.ID_RESERVA});  
+			}, function(status, error){
+				console.error(status + " " + error);
+				res.send({"resultado":"error"});  
+			});
+	});
 });
 
 app.post('/contarSpots',function(req,res){
