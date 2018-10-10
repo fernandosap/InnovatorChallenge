@@ -56,6 +56,8 @@
             <p id="CorreoUsuario">Jonathan.aguilar@sap.com</p>
             <p id="NivelUsuario"><i class="fas fa-chess-king"></i>  Master Driver</span></p>
             <p id="PuntosUsuario">800 pts</p>
+            <p id="AgregarNuevoSpot"><a class="btn btn-success" target="_blank" href="#" role="button">Register new spot</a></p>
+            <p><button id="AgregarNuevoVehiculo" class="btn btn-primary" data-toggle="modal" data-target="#modalCreacionVehiculo" role="button">Register new Vehicle</button></p>
     </div>
     <div class="col-lg-9">
         <h3>Reservations</h3>
@@ -88,67 +90,158 @@
         <br>
 
         <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-hover" id="tabla_reservas_spots">
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col">Place</th>
-              <th scope="col">Date</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
               <th scope="col">From</th>
               <th scope="col">To</th>
               <th scope="col">Revenue</th>
+              <th scope="col">Car Plates</th>
               <th scope="col">Status</th>
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">156</th>
-              <td>Cuajimalpa, Cajón 57</td>
-              <td>23/09/2018</td>
-              <td>3:15</td>
-              <td>6:30</td>
-              <td>$20</td>
-              <td>Accepted</td>
-              <td><p><a class="btn btn-danger" target="_blank" href="#"" role="button">Delete</a></td>
-            </tr>
-            <tr>
-              <th scope="row">156</th>
-              <td>Cuajimalpa, Cajón 57</td>
-              <td>25/09/2018</td>
-              <td>00:15</td>
-              <td>03:00</td>
-              <td>$15</td>
-              <td>Pending</td>
-              <td><p><a class="btn btn-success" target="_blank" href="#"" role="button">Accept</a></td>
-                <td><p><a class="btn btn-danger" target="_blank" href="#"" role="button">Delete</a></td>
-            </tr>
-            <tr>
-              <th scope="row">156</th>
-              <td>Cuajimalpa, Cajón 57</td>
-              <td>26/09/2018</td>
-              <td>00:15</td>
-              <td>03:00</td>
-              <td>$15</td>
-              <td>Pending</td>
-              <td><p><a class="btn btn-success" target="_blank" href="#"" role="button">Accept</a></td>
-                <td><p><a class="btn btn-danger" target="_blank" href="#"" role="button">Delete</a></td>
-            </tr>
-            <tr>
-              <th scope="row"></th>
-              <td colspan="8"><p><a class="btn btn-success" target="_blank" href="#" role="button">Register new spot</a></td>
-            </tr>
+          <!-- Contenido Dinámico que agrega el JS -->
           </tbody>
         </table>
-
+        </div>
 
         <br>
         <h3>My Vehicles</h3>
         <br>
 
+        <div class="table-responsive">
+        <table class="table table-hover" id="tabla_my_vehicles">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Year</th>
+              <th scope="col">Plate</th>
+              <th scope="col">Color</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+          <!-- Contenido Dinámico que agrega el JS -->
+          </tbody>
+        </table>
         </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- modal de creacíon de vehiculo -->
+<!-- id de vehiculo, id de usuario, marca, anio, placa y el color -->
+
+<div class="modal fade" id="modalCreacionVehiculo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal">Add up new Vehicle.</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center" id="MensajeModalConfirmacion"> 
+          <p><h4>Add the info of the vehicle you want to add.</h4></p>
+
+          <p><h5>User: </h5> 
+            <input id="input_usuario" type="text" name="Usuario" class="disabled" disabled>
+          </p>
+
+          <p><h5>Plates: </h5>
+            <input type="text" id="input_plates" name="Placa">
+          </p>
+
+          <p>
+           <div class="form-group">
+            <label>Brand</label>
+            <select class="form-control" id="dropdown_brand">
+              <option>Ford</option>
+              <option>Chevy</option>
+              <option>Hyundai</option>
+              <option>Volkswagen</option>
+              <option>Tesla</option>
+              <option>Honda</option>
+              <option>Renault</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          </p>
+
+          <p>
+            
+          <div class="form-group">
+            <label>Year</label>
+            <select class="form-control" id="dropdown_year">
+              <option>2019</option>
+              <option>2018</option>
+              <option>2017</option>
+              <option>2016</option>
+              <option>2015</option>
+              <option>2014</option>
+              <option>2013</option>
+              <option>2012</option>
+              <option>2011</option>
+              <option>2010</option>
+            </select>
+          </div>
+
+          </p>
+
+          <p>
+           
+          <div class="form-group">
+            <label>Color</label>
+            <select class="form-control" id="dropdown_color">
+              <option>Red</option>
+              <option>Blue</option>
+              <option>White</option>
+              <option>Yellow</option>
+              <option>Orange</option>
+              <option>Black</option>
+            </select>
+          </div>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmarCreacionVehiculo" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmacion">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal de confirmación de creación de coche -->
+
+<div class="modal fade" id="modalConfirmacionVehiculo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal">Congratulations!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center"> 
+          <p><b id="MensajeModalConfirmacion">Your car was added succesfully!</b></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
   </div>
 </div>

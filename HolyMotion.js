@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var o = require('odata');
+var request = require('request');
 
 app.use(bodyParser.json());
 
@@ -11,7 +12,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true})); 
 
 o().config({
-  format: 'json',
+  // format: 'json',
   username: 'i848070', 	// the basic auth username
   password: 'WelcomeWelcome1.',
   isWithCredentials: true
@@ -49,6 +50,9 @@ app.get('/Signin', function(req,res){
 	res.render('signup')
 });
 
+
+// INICIAN POSTS DE FUNCIONALIDAD -----------------------------
+
 app.post('/consultarVehiculos',function(req,res){
 	usuario = req.body.usuario;
 	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + usuario;
@@ -64,22 +68,84 @@ app.post('/consultarVehiculos',function(req,res){
 	});
 });
 
+app.post('/consultarCoches', function(req,res){
+	id_usuario = req.body.id_usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + id_usuario;
+	o(url).get(function(data){
+		vehiculos = data.d.results;
+		console.log("El resultado de consultar vehiculos: " + vehiculos);
+		res.send({"vehiculos":vehiculos});
+	})
+});
+
+app.post('/EliminarVehiculo', function(req, res){
+	console.log("El vehículo a eliminar es: " + req.body.id_vehiculo);
+	id_vehiculo = req.body.id_vehiculo;
+
+	// opciones para configuración del DELETE
+	var options = {
+	    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos(" + id_vehiculo +")",
+	    method: 'DELETE',
+	    auth: {
+	    'user': 'i848070',
+	    'pass': 'WelcomeWelcome1.'
+		}
+	};
+
+	console.log(options.url);
+
+	request(options, function (error, response, body) {
+	    if (!error && response.statusCode == 204) {
+	        console.log("El status de respuesta es: " + response.statusCode);
+	        res.send({"resultado":"success"}); 
+	    } else {
+	    	console.log("El error de respuesta es: " + error);
+	    	res.send({"resultado":"fail"}); 
+	    };
+	});
+});
+
+app.post('/CrearCoche', function(req,res){
+	// id de vehiculo, id de usuario, marca, anio, placa y el color
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos";
+	console.log(req.body.info);
+	o(url).get(function(data) {
+		numero_nuevo = Number(data.d.results.length) + 1;
+		info = {
+			"ID_VEHICULO": numero_nuevo,
+			"ID_USUARIO": req.body.info.ID_USUARIO,
+			"MARCA": req.body.info.MARCA,
+			"ANIO": req.body.info.ANIO,
+			"PLACA": req.body.info.PLACA,
+			"COLOR": req.body.info.COLOR_COCHE 
+		};
+		o(url).post(info).save(function(data){
+			console.log("Información agregada satisfactoriamente");
+			res.send({"resultado":"success"});  
+		}, function(status, error){
+			console.error(status + " " + error);
+			res.send({"resultado":"error"});  
+		});
+	});
+});
+
 app.post('/consultarReservas',function(req,res){
 id_usuario = req.body.id_usuario;
 	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_USUARIO_RESERVA eq " + id_usuario
 	o(url).get(function(data){
 		reservas = data.d.results;
-		console.log(reservas);
+		console.log("El resultado de consultar reservas: " + reservas);
 		res.send({"reservas":reservas});
 	})
 });
 
 app.post('/consultarReservasPorSpot',function(req,res){
-id_usuario = req.body.spot_id;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_USUARIO_RESERVA eq " + id_usuario
+spot = req.body.spot_id;
+console.log(spot);
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_SPOT eq " + spot
 	o(url).get(function(data){
 		reservas = data.d.results;
-		console.log(reservas);
+		console.log("El resultado de reservas por spot " + reservas);
 		res.send({"reservas":reservas});
 	})
 });
@@ -243,4 +309,4 @@ app.post('/obtenerImagenesUsuario', function(req,res){
 		foto2 = usuario.IMAGEN_2;
 		res.send({"foto1":foto1,"foto2":foto2});
 	})
-})
+});
