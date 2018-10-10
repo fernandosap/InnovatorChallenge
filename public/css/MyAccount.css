@@ -44,9 +44,9 @@ font-weight: 300;
 font-weight: bold;
 }
 
-/*#infowindow-content {
+#infowindow-content {
 display: none;
-}*/
+}
 
 #map #infowindow-content {
 display: inline;
@@ -67,7 +67,9 @@ position:relative !important;
 #pac-container {
 padding-bottom: 12px;
 margin-right: 12px;
+z-index:20 !important;
 position:relative !important;
+/*position: absolute !important;*/
 }
 
 .pac-controls {
@@ -103,10 +105,10 @@ font-weight: 500;
 padding: 6px 12px;
 }
 
-/*.modal{
-    z-index: -1 !important;   
+.modal{
+    z-index: 20 !important;   
 }
 .modal-backdrop{
-    z-index: 0 !important;        
+    z-index: 10 !important;        
 }​
-*/
+
