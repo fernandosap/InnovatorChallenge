@@ -78,13 +78,15 @@ app.post('/consultarCoches', function(req,res){
 	})
 });
 
-app.post('/EliminarVehiculo', function(req, res){
-	console.log("El vehículo a eliminar es: " + req.body.id_vehiculo);
-	id_vehiculo = req.body.id_vehiculo;
+app.post('/EliminarObjeto', function(req, res){
+	console.log(req.body);
+	tabla = req.body.tabla
+	console.log("El objeto a eliminar es: " + req.body.id_objeto);
+	id_objeto = req.body.id_objeto;
 
 	// opciones para configuración del DELETE
 	var options = {
-	    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos(" + id_vehiculo +")",
+	    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/"+ tabla +"(" + id_objeto +")",
 	    method: 'DELETE',
 	    auth: {
 	    'user': 'i848070',
@@ -96,12 +98,34 @@ app.post('/EliminarVehiculo', function(req, res){
 
 	request(options, function (error, response, body) {
 	    if (!error && response.statusCode == 204) {
-	        console.log("El status de respuesta es: " + response.statusCode);
+	        console.log("El status de respuesta de eliminar es: " + response.statusCode);
 	        res.send({"resultado":"success"}); 
 	    } else {
-	    	console.log("El error de respuesta es: " + error);
+	    	console.log("El error de respuesta de eliminar es: " + error);
 	    	res.send({"resultado":"fail"}); 
 	    };
+	});
+});
+
+app.post('/CrearSpot', function(req,res){
+	// id de vehiculo, id de usuario, marca, anio, placa y el color
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots";
+	console.log(req.body);
+	o(url).get(function(data) {
+		numero_nuevo = Number(data.d.results.length) + 1;
+		info = {
+			"ID_SPOT": numero_nuevo,
+			"ID_USUARIO": Number(req.body.ID_USUARIO),
+			"DIRECCION": req.body.DIRECCION
+		};
+		console.log(info);
+		o(url).post(info).save(function(data){
+			console.log("Información agregada satisfactoriamente");
+			res.send({"resultado":"success"});  
+		}, function(status, error){
+			console.error(status + " " + error);
+			res.send({"resultado":"error"});  
+		});
 	});
 });
 
@@ -113,12 +137,13 @@ app.post('/CrearCoche', function(req,res){
 		numero_nuevo = Number(data.d.results.length) + 1;
 		info = {
 			"ID_VEHICULO": numero_nuevo,
-			"ID_USUARIO": req.body.info.ID_USUARIO,
+			"ID_USUARIO": Number(req.body.info.ID_USUARIO),
 			"MARCA": req.body.info.MARCA,
 			"ANIO": req.body.info.ANIO,
 			"PLACA": req.body.info.PLACA,
 			"COLOR": req.body.info.COLOR_COCHE 
 		};
+		console.log(info);
 		o(url).post(info).save(function(data){
 			console.log("Información agregada satisfactoriamente");
 			res.send({"resultado":"success"});  
