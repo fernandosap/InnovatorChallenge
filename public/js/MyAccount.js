@@ -51,6 +51,15 @@ $.post("/consultarCoches",{id_usuario:usuario.ID_USUARIO},function(result){
     }
 });
 
+$.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
+      spots = result.spots;
+      var tabla = "spots";
+      console.log(spots);
+      for(i=0; i < spots.length ;i++){
+        $("#tabla_my_spots").append('<tr><th scope="row">' + spots[i].ID_SPOT + '</th><td>' + spots[i].DIRECCION + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + spots[i].ID_SPOT + '); return false" href="#" role="button">Delete</a></td></tr>');
+    }
+});
+
 $("#AgregarNuevoVehiculo").on('click',function(){
   $("#input_usuario").val(usuario.NOMBRE + " "  + usuario.APELLIDO);
 });
@@ -117,6 +126,8 @@ function EliminarObjeto(tabla,id_objeto){
     tabla_eliminar = "reservas";
   } else if(tabla == 3 ){
     tabla_eliminar = "vehiculos";
+  } else if(tabla == 4 ){
+    tabla_eliminar = "spots";
   };
   console.log(tabla_eliminar);
   $("#modalConfirmacionVehiculoEliminado").modal('show');

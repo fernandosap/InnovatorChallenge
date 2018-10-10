@@ -63,7 +63,8 @@ if (navigator.geolocation) {
           map: map,
           icon:image,
           id_marker: spots[i].ID_SPOT,
-          direccion: spots[i].DIRECCION
+          direccion: spots[i].DIRECCION,
+          direccion_gmaps: "https://maps.google.com/?q=" + pos2.lat + "," + pos2.lng
         });
 
       };
@@ -121,8 +122,11 @@ if (navigator.geolocation) {
                 console.log(result.id_reserva);
                 if (resultado == "success"){
                   mensaje = "Tu reserva se realizó de manera exitosa. <p> El id de tu reserva es: " + result.id_reserva + "</p>"
+                  $("#direccion_gmaps").attr('href',String(marcador.direccion_gmaps));
+                  $("#direccion_gmaps_boton").show();
                 } else {
                   mensaje = "Hubo un error en tu reservación. Inténtalo de nuevo más tarde."
+                  $("#direccion_gmaps_boton").hide();
                 }
                 console.log("Se realizó el post satisfactoriamente.");
                 $("#exampleModal").modal('hide');
