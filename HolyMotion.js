@@ -297,6 +297,10 @@ app.post('/crearReserva',function(req,res){
 			console.log(numero_nuevo);
 		};
 		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+
+		fecha1 = new Date(req.body.FECHA_RENT_INICIO);
+		fecha2 = new Date(req.body.FECHA_RENT_FIN);
+
 			info = {
 				ID_RESERVA: numero_nuevo,
 				ID_SPOT: Number(req.body.ID_SPOT),
@@ -306,6 +310,8 @@ app.post('/crearReserva',function(req,res){
 				HORA_INICIO: req.body.HORA_INICIO,
 				HORA_FIN: req.body.HORA_FIN,
 				UBICACION_DESC: req.body.UBICACION_DESC,
+				FECHA_RENT_INICIO: '/Date('+ fecha1.getTime()+')/',
+				FECHA_RENT_FIN: '/Date('+ fecha2.getTime()+')/',
 				PLACA: req.body.PLACA,
 				ESTATUS: "Pending"
 			}
@@ -346,3 +352,135 @@ app.post('/obtenerImagenesUsuario', function(req,res){
 		res.send({"foto1":foto1,"foto2":foto2});
 	})
 });
+
+// Servicios para recast -> Consultar spots y crear una reserva. 
+
+app.post('/consultarSpotsRecast',function(req,res){
+	id_usuario = req.body.id_usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$top(3)"
+	o(url).get(function(data){
+		spots = data.d.results;
+		console.log(spots);
+		res.send({
+		    replies: [{
+			    "type": "list",
+			    "content": {
+			      "elements": [
+			        {
+			          "title": spots[0].DIRECCION,
+			          "imageUrl": "https://dqbasmyouzti2.cloudfront.net/assets/content/cache/made/content/images/articles/Office_Buildings_Demand_Response_XL_721_420_80_s_c1.jpg",
+			          "subtitle": "2.8km $2 per hour",
+			          "buttons": [
+			            {
+			              "title": "Reserve",
+			              "type": "BUTTON_TYPE",
+			              "value": "Yes, I want to reserve the spot "  + spots[0].ID_SPOT,
+			            }
+			          ]
+			        },
+			        {
+			          "title": spots[1].DIRECCION,
+			          "imageUrl": "https://2qibqm39xjt6q46gf1rwo2g1-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/12184802_web1_M1-Alderwood-EDH-180611.jpg",
+			          "subtitle": "3.6km $2.4 per hour",
+			          "buttons": [
+			            {
+			              "title": "Reserve",
+			              "type": "BUTTON_TYPE",
+			              "value": "Yes, I want to reserve the spot "  + spots[1].ID_SPOT,
+			            }
+			          ]
+			        },
+			        {
+			          "title": spots[2].DIRECCION,
+			          "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Industrial_Trust_Building_Providence_RI.jpg/1200px-Industrial_Trust_Building_Providence_RI.jpg",
+			          "subtitle": "5.3km $4.2 per hour",
+			          "buttons": [
+			            {
+			              "title": "Reserve",
+			              "type": "BUTTON_TYPE",
+			              "value": "Yes, I want to reserve the spot " + spots[2].ID_SPOT,
+			            }
+			          ]
+			        }
+			      ],
+			      "buttons": [
+			        {
+			          "title": "Select a spot to reserve",
+			          "type": "BUTTON_TYPE",
+			          "value": ""
+			        }
+			      ],
+			    }
+			  }]
+		  }); 
+	})
+})
+
+app.post('/reservarRecast',function(req,res){
+	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$select=ID_RESERVA&$orderby=ID_RESERVA%20desc&$top=1"
+
+	id_spot = req.body.id_spot;
+	id_usuario_reserva = req.body.id_usuario_reserva
+
+	o(url2).get(function(data){
+		if(typeof data.d.results[0] == 'undefined'){
+			numero_nuevo = 1;
+		} else {
+			console.log(data.d.results[0].ID_RESERVA);
+			numero_nuevo = Number(data.d.results[0].ID_RESERVA) + 1;
+			console.log(numero_nuevo);
+		};
+
+		url3 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$filter=ID_SPOT eq " + id_spot
+
+		o(url3).get(function(data){
+			var spots = data.d.results;
+			console.log(spots);
+			url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+			info = {
+				ID_RESERVA: numero_nuevo,
+				ID_SPOT: id_spot,
+				ID_USUARIO_RESERVA: Number(id_usuario_reserva),
+				FECHA_INICIO: String(yyyymmdd()),
+				FECHA_FIN: String(yyyymmdd()),
+				HORA_INICIO: '01:10',
+				HORA_FIN: '14:30',
+				UBICACION_DESC: spots[0].DIRECCION,
+				FECHA_RENT_INICIO: '/Date('+String(Date.now())+')/',
+				FECHA_RENT_FIN: '/Date('+String(Date.now()+10000)+')/',
+				PLACA: 'YOLO123',
+				ESTATUS: "Pending"
+			}
+			console.log(info);
+			o(url).post(info).save(function(data){
+				console.log(data.d)
+				res.send({
+			    replies: [{
+			      type: 'text',
+			      content: 'Your reservation was done successfully with the ID: ' + data.d.ID_RESERVA
+			    }]
+			  });   
+			}, function(status, error){
+				res.send({
+				    replies: [{
+				      type: 'text',
+				      content: 'There has been an error, try later.'
+				    }]
+				  });  
+			});
+		});		
+	});
+});
+
+
+function yyyymmdd() {
+    var now = new Date();
+    var y = now.getFullYear();
+    var m = now.getMonth() + 1;
+    var d = now.getDate();
+    var mm = m < 10 ? '0' + m : m;
+    var dd = d < 10 ? '0' + d : d;
+    return '' + y + '-' + mm + '-' + dd;
+}
+
+
