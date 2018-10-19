@@ -298,8 +298,11 @@ app.post('/crearReserva',function(req,res){
 		};
 		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
 
-		fecha1 = new Date(req.body.FECHA_RENT_INICIO);
-		fecha2 = new Date(req.body.FECHA_RENT_FIN);
+		fecha1 = new Date(req.body.FECHA_INICIO + " " + req.body.HORA_INICIO);
+		fecha2 = new Date(req.body.FECHA_FIN+ " " + req.body.HORA_FIN);
+
+		console.log(fecha1);
+		console.log(fecha2);
 
 			info = {
 				ID_RESERVA: numero_nuevo,
@@ -310,8 +313,8 @@ app.post('/crearReserva',function(req,res){
 				HORA_INICIO: req.body.HORA_INICIO,
 				HORA_FIN: req.body.HORA_FIN,
 				UBICACION_DESC: req.body.UBICACION_DESC,
-				FECHA_RENT_INICIO: '/Date('+ fecha1.getTime()+')/',
-				FECHA_RENT_FIN: '/Date('+ fecha2.getTime()+')/',
+				FECHA_RENT_INICIO: '/Date('+ (fecha1.getTime()-18000000) +')/',
+				FECHA_RENT_FIN: '/Date('+ (fecha2.getTime()-18000000)+')/',
 				PLACA: req.body.PLACA,
 				ESTATUS: "Pending"
 			}

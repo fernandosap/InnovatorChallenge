@@ -10,6 +10,7 @@ var contentString = [];
 var coches = [];
 var info;
 var test ;
+var placaSeleccionada = "";
 
 function initMap() {
 map = new google.maps.Map(document.getElementById('map'), {
@@ -70,36 +71,16 @@ if (navigator.geolocation) {
       };
 
       for(x=0;x<markers.length;x++){
-        var placaSeleccionada = "";
+        console.log("Entrando a for de marcadores");
         var id_coche_seleccionado;
         google.maps.event.addListener(markers[x], 'click', function() {
           var marcador = this;
-          console.log(marcador);
+          console.log("marcador" + x + " agregado");
           infowindow.setContent(infoMensaje(this));
           infowindow.open(map, this);
-          // Agregando información al modal 
-          $("#botonReservar").click(function () {
-            $("#tituloModal").text(marcador.direccion);
-            $.post("/consultarVehiculos",{usuario:usuario.ID_USUARIO},function(result){
-              if(result.resultado.existe==true){
-                console.log(result.resultado.vehiculos);
-                coches = result.resultado.vehiculos;
-                for(var i = 0; i<coches.length; i++){
-                  coche_desc = coches[i].MARCA + ' ' + coches[i].ANIO + ' ' + coches[i].PLACA;
-                  $("#dropdownVehiculos").append("<a class='dropdown-item' href='#' title='" + coches[i].ID_VEHICULO + "' name='" + coches[i].PLACA + "' id='cocheOpcion" + (i+1) + "'>" + coche_desc + "</a>");
-                  $("#cocheOpcion" + (i+1)).on('click', function(){
-                    coche = this.text;
-                    placaSeleccionada = this.name;
-                    $("#dropdownMenuButton").text(coche);
-                  });
-                };
-              } else {
-                $("#dropdownVehiculos").append("<a class='dropdown-item' href='#''> Sin vehículos registrados </a>");
-              }
-              console.log("resultado vehículo " + String(result.resultado.existe));
-            });
 
             $("#botonConfirmarReserva").click(function(){
+              console.log("Realizando reserva");
               // Hacer un post a la tabla de hana para guardar la reserva, pasando ID de lugar, fecha y hora.
               info = {
                "ID_SPOT": marcador.id_marker,
@@ -135,22 +116,42 @@ if (navigator.geolocation) {
                 infowindow.close();
               });
           });
-
+      console.log("Proceso de carga de mapa terminado");
           });
-        });
       };
 
-      console.log("Proceso de carga de mapa terminado");
+
   		})},
 	)}
+};
+
+function reservar(direccion){
+  $("#exampleModal").modal('show');
+  $("#tituloModal").text(direccion);
+  $.post("/consultarVehiculos",{usuario:usuario.ID_USUARIO},function(result){
+    if(result.resultado.existe==true){
+      console.log(result.resultado.vehiculos);
+      coches = result.resultado.vehiculos;
+      for(var i = 0; i<coches.length; i++){
+        coche_desc = coches[i].MARCA + ' ' + coches[i].ANIO + ' ' + coches[i].PLACA;
+        $("#dropdownVehiculos").append("<a class='dropdown-item' href='#' title='" + coches[i].ID_VEHICULO + "' name='" + coches[i].PLACA + "' id='cocheOpcion" + (i+1) + "'>" + coche_desc + "</a>");
+        $("#cocheOpcion" + (i+1)).on('click', function(){
+          coche = this.text;
+          placaSeleccionada = this.name;
+          $("#dropdownMenuButton").text(coche);
+        });
+      };
+    } else {
+      $("#dropdownVehiculos").append("<a class='dropdown-item' href='#''> Sin vehículos registrados </a>");
+    }
+    console.log("resultado vehículo " + String(result.resultado.existe));
+  })
 };
 
 
 function infoMensaje(marker){
   var mensaje = ""
   var rand = Math.floor((Math.random() * (2 - 0) + 0));
-  array = ["Fernando", "Jonathan", "Bruno"];
-  mensaje = array[rand];
 
   mensaje = '<div class="text-center" id="content">'+
           '<div id="siteNotice">'+
@@ -161,7 +162,7 @@ function infoMensaje(marker){
           '<p><b>Owner:</b> Jonathan Aguilar</p>'+
           '<p><b>Cost per hour:</b> $2</p>'+
           '<p><b>Time to get there:</b> 3 min</p>'+
-          '<p><button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModal" id="botonReservar">Reserve Spot!</button></p>'+
+          '<p><button class="btn btn-lg btn-primary btn-block" onclick="reservar(\'' + String(marker.direccion).trim() + '\');return false" id="botonReservar">Reserve Spot!</button></p>'+
           // '<p>id_spot: '+ marker.id_marker + '</p>'+
           '</div></div>'
           ;
