@@ -181,6 +181,7 @@ function ConfirmarObjeto(tabla,id_objeto){
   console.log(tabla_confirmar);
   mensaje_confirmacion = "You are sure you want to confirm this " + texto_mensaje; 
   $("#MensajeModalConfirmacionConfirmacion").text(mensaje_confirmacion);
+  $("#Close_modal_confirmacion_eliminado").text("YES CONFIRM!")
   $("#modalConfirmacionVehiculoEliminado").modal('show');
   $("#Close_modal_confirmacion_eliminado").on('click',function(){ 
     console.log(tabla + " " + id_objeto);
