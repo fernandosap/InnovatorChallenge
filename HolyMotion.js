@@ -217,6 +217,7 @@ app.post('/ActualizarImagenes', function(req, res){
 		request(options, function (error, response, body) {
 		    if (!error && response.statusCode == 204) {
 		       console.log("Imagenes y usuario actualizado");
+		       res.send({"resultado":"success"});
 		    } else {
 		    	console.log("El error de respuesta de confirmar es: " + error);
 		    	res.send({"resultado":"fail"}); 

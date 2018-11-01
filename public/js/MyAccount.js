@@ -272,6 +272,8 @@ function cargarImagen(image){
                 mensaje = "Hubo un error. Inténtalo de nuevo más tarde."
               }
           });
+         } else {
+          location.reload();
          }
       }
       // Upload succeeded. Do something here with the file info.
