@@ -190,12 +190,14 @@ function ConfirmarObjeto(tabla,id_objeto){
   });
 };
 
-function cargarImagen(){
+function cargarImagen(image){
   /**
  * Two variables should already be set.
  * dropboxToken = OAuth access token, specific to the user.
  * file = file object selected in the file widget.
  */
+
+ var dropboxToken = 'G8yo7qskgYAAAAAAAAAAKZNbGFrkMNPKXN76oP4BFwRNLPwTzsYcPLtBzlPMZm0i';
   
   var xhr = new XMLHttpRequest();
    
@@ -219,12 +221,12 @@ function cargarImagen(){
   xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
   xhr.setRequestHeader('Content-Type', 'application/octet-stream');
   xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-    path: '/' +  file.name,
+    path: '/Test/' +  image[0].name,
     mode: 'add',
     autorename: true,
     mute: false
   }));
    
-  xhr.send(file);
+  xhr.send(image[0]);
 };
 
