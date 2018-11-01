@@ -86,6 +86,7 @@ if (navigator.geolocation) {
                "ID_SPOT": marcador.id_marker,
                "UBICACION_DESC": marcador.direccion,
                "ID_USUARIO_RESERVA": usuario.ID_USUARIO,
+               "NOMBRE_USUARIO": usuario.NOMBRE + " " + usuario.APELLIDO,
                "FECHA_INICIO": $("#fecha_inicio").val(),
                "FECHA_FIN": $("#fecha_fin").val(),
                "HORA_INICIO": $("#hora_inicio").val(),

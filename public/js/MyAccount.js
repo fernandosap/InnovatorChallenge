@@ -30,10 +30,15 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
         id_spot = spots[i].ID_SPOT;
           $.post("/consultarReservasPorSpot",{spot_id:id_spot},function(result){
             reservas2 = result.reservas;
+            console.log("Imprimiendo la información de las reservas para segunda tabla");
             console.log(reservas2);
             for(x=0;x<reservas2.length;x++){
               if(reservas2[x].ID_RESERVA!=='undefined'){
-                $("#tabla_reservas_spots").append('<tr><th scope="row">' + reservas2[x].ID_RESERVA + '</th><td>' +reservas2[x].UBICACION_DESC + '</td><td>' + reservas2[x].FECHA_INICIO + '</td><td>' + reservas2[x].FECHA_FIN + '</td><td> ' + reservas2[x].HORA_INICIO + '</td><td> ' + reservas2[x].HORA_FIN + '</td><td>$' + Math.floor(Math.random()*100) + '</td><td>' + reservas2[x].PLACA + '</td><td>' + reservas2[x].ESTATUS + '</td><td><p><a class="btn btn-danger" onclick="EliminarObjeto(2,' + reservas2[x].ID_RESERVA + '); return false" href="#"" role="button">Delete</a></td></tr>');
+                if(reservas2[x].ESTATUS == 'Confirmed'){
+                  $("#tabla_reservas_spots").append('<tr><th scope="row">' + reservas2[x].ID_RESERVA + '</th><td>' +reservas2[x].UBICACION_DESC + '</td><td>' + reservas2[x].FECHA_INICIO + '</td><td>' + reservas2[x].FECHA_FIN + '</td><td> ' + reservas2[x].HORA_INICIO + '</td><td> ' + reservas2[x].HORA_FIN + '</td><td>$' + Math.floor(Math.random()*100) + '</td><td>' + reservas2[x].PLACA + '</td><td>' + reservas2[x].ESTATUS + '</td><td><p><a class="btn btn-danger" onclick="EliminarObjeto(2,' + reservas2[x].ID_RESERVA + '); return false" href="#"" role="button">Delete</a></td></tr>');
+                } else if (reservas2[x].ESTATUS == 'Pending'){
+                  $("#tabla_reservas_spots").append('<tr><th scope="row">' + reservas2[x].ID_RESERVA + '</th><td>' +reservas2[x].UBICACION_DESC + '</td><td>' + reservas2[x].FECHA_INICIO + '</td><td>' + reservas2[x].FECHA_FIN + '</td><td> ' + reservas2[x].HORA_INICIO + '</td><td> ' + reservas2[x].HORA_FIN + '</td><td>$' + Math.floor(Math.random()*100) + '</td><td>' + reservas2[x].PLACA + '</td><td>' + reservas2[x].ESTATUS + '<td><p><a class="btn btn-success" onclick="ConfirmarObjeto(2,' + reservas2[x].ID_RESERVA + '); return false" href="#"" role="button">Confirm</a></td>' + '</td><td><p><a class="btn btn-danger" onclick="EliminarObjeto(2,' + reservas2[x].ID_RESERVA + '); return false" href="#"" role="button">Delete</a></td></tr>');
+                }
               };
             };
           });
@@ -151,5 +156,75 @@ function EliminarObjeto(tabla,id_objeto){
         }
     });
   });
+};
+
+function ConfirmarObjeto(tabla,id_objeto){
+  if(tabla == 1 || tabla == 2){
+    tabla_confirmar = "reservas";
+  } else if(tabla == 3 ){
+    tabla_confirmar = "vehiculos";
+  } else if(tabla == 4 ){
+    tabla_confirmar = "spots";
+  };
+  console.log(tabla_confirmar);
+  $("#modalConfirmacionVehiculoEliminado").modal('show');
+  $("#Close_modal_confirmacion_eliminado").on('click',function(){ 
+    console.log(tabla + " " + id_objeto);
+    $.post('/ConfirmarObjeto', {"tabla":tabla_confirmar, "id_objeto":id_objeto}, function(result){
+      var resultado = result.resultado;
+      mensaje = resultado;
+      console.log(resultado);
+      if (resultado == "success"){
+          mensaje = "Tu " + tabla + " se eliminó de manera exitosa.";
+          console.log("Se realizó el post satisfactoriamente.");
+          $("#modalConfirmacionVehiculoEliminado").modal('hide');
+          $("#MensajeModalConfirmacion").html(mensaje);
+          $("#modalConfirmacionVehiculo").modal('show');
+          $("#Close_modal_confirmacion").on('click',function(){
+          location.reload();
+          });
+        } else {
+          mensaje = "Hubo un error. Inténtalo de nuevo más tarde."
+        }
+    });
+  });
+};
+
+function cargarImagen(){
+  /**
+ * Two variables should already be set.
+ * dropboxToken = OAuth access token, specific to the user.
+ * file = file object selected in the file widget.
+ */
+  
+  var xhr = new XMLHttpRequest();
+   
+  xhr.upload.onprogress = function(evt) {
+    var percentComplete = parseInt(100.0 * evt.loaded / evt.total);
+    // Upload in progress. Do something here with the percent complete.
+  };
+   
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var fileInfo = JSON.parse(xhr.response);
+      // Upload succeeded. Do something here with the file info.
+    }
+    else {
+      var errorMessage = xhr.response || 'Unable to upload file';
+      // Upload failed. Do something here with the error.
+    }
+  };
+   
+  xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
+  xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+  xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+  xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
+    path: '/' +  file.name,
+    mode: 'add',
+    autorename: true,
+    mute: false
+  }));
+   
+  xhr.send(file);
 };
 

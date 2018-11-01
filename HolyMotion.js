@@ -3,6 +3,15 @@ var app = express();
 var bodyParser = require('body-parser');
 var o = require('odata');
 var request = require('request');
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'holymotion.notifications@gmail.com',
+    pass: 'Welcome1.'
+  }
+});
 
 app.use(bodyParser.json());
 
@@ -105,6 +114,69 @@ app.post('/EliminarObjeto', function(req, res){
 	    	res.send({"resultado":"fail"}); 
 	    };
 	});
+});
+
+app.post('/ConfirmarObjeto', function(req, res){
+	tabla = req.body.tabla
+	console.log("El objeto a confirmar es: " + req.body.id_objeto);
+	id_objeto = req.body.id_objeto;
+
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_RESERVA eq " + id_objeto
+	o(url).get(function(data){
+		reserva = data.d.results;
+		// opciones para configuración del DELETE
+		var options = {
+		    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/"+ tabla +"(" + id_objeto +")",
+		    method: 'PUT',
+		    auth: {
+		    'user': 'i848070',
+		    'pass': 'WelcomeWelcome1.'
+			},
+			json: {
+				ID_RESERVA: reserva[0].ID_RESERVA,
+				ID_SPOT: reserva[0].ID_SPOT,
+				ID_USUARIO_RESERVA: reserva[0].ID_USUARIO_RESERVA,
+				FECHA_INICIO: reserva[0].FECHA_INICIO,
+				FECHA_FIN: reserva[0].FECHA_FIN,
+				HORA_INICIO: reserva[0].HORA_INICIO,
+				HORA_FIN: reserva[0].HORA_FIN,
+				ESTATUS: "Confirmed",
+				PLACA: reserva[0].PLACA,
+				FECHA_RENT_INICIO: reserva[0].FECHA_RENT_INICIO,
+				FECHA_RENT_FIN: reserva[0].FECHA_RENT_FIN,
+				UBICACION_DESC: reserva[0].UBICACION_DESC
+			}
+		};
+
+		console.log(options.url);
+
+		request(options, function (error, response, body) {
+		    if (!error && response.statusCode == 204) {
+		        console.log("El status de respuesta de confirmar es: " + response.statusCode);
+
+				var mailOptions = {
+				  from: 'holymotion.notifications@gmail.com',
+				  to: 'fernando.sanchez@sap.com',
+				  subject: 'Your reservation of the spot ' + reserva[0].UBICACION_DESC + ' in HolyMotion has been confirmed!',
+				  html: '<h2> Access your account at http://holymotionjs.cfapps.eu10.hana.ondemand.com/MyAccount in order to review your spot status. </h2>'
+				};
+
+				transporter.sendMail(mailOptions, function(error, info){
+				  if (error) {
+				    console.log(error);
+				  } else {
+				    console.log('Email sent: ' + info.response);
+				    res.send({"resultado":"success"});
+				  }
+				});
+
+		    } else {
+		    	console.log("El error de respuesta de confirmar es: " + error);
+		    	res.send({"resultado":"fail"}); 
+		    };
+		});
+
+	})
 });
 
 app.post('/CrearSpot', function(req,res){
@@ -257,6 +329,7 @@ app.post('/validarLogin', function(req,res){
 	pass = req.body.pass;
 	console.log(email);
 	console.log(pass);
+
 	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=EMAIL eq '" + email + "'"
 	o(url).get(function(data) {
 		if(typeof data.d.results[0] !== 'undefined'){
@@ -313,14 +386,31 @@ app.post('/crearReserva',function(req,res){
 				HORA_INICIO: req.body.HORA_INICIO,
 				HORA_FIN: req.body.HORA_FIN,
 				UBICACION_DESC: req.body.UBICACION_DESC,
-				FECHA_RENT_INICIO: '/Date('+ (fecha1.getTime()-18000000) +')/',
-				FECHA_RENT_FIN: '/Date('+ (fecha2.getTime()-18000000)+')/',
+				FECHA_RENT_INICIO: '/Date('+ (fecha1.getTime()) +')/',
+				FECHA_RENT_FIN: '/Date('+ (fecha2.getTime())+')/',
 				PLACA: req.body.PLACA,
 				ESTATUS: "Pending"
 			}
 			console.log(info);
 			o(url).post(info).save(function(data){
-				res.send({"resultado":"success","id_reserva":data.d.ID_RESERVA});  
+
+				// post a blockchain
+
+				var options = {
+				method:'POST',
+				  url: 'https://hyperledger-fabric.cfapps.eu10.hana.ondemand.com/api/v1/chaincodes/2ddcc9f0-bdc0-4ef4-89b9-870622edcfb2-com-sap-icn-blockchain-holymotion-booking/latest/' + numero_nuevo,
+				  headers: {
+				    'Authorization': 'bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vaW5ub3ZhdG9yLmF1dGhlbnRpY2F0aW9uLmV1MTAuaGFuYS5vbmRlbWFuZC5jb20vdG9rZW5fa2V5cyIsImtpZCI6ImtleS1pZC0xIiwidHlwIjoiSldUIn0.eyJqdGkiOiI1N2E2ZDM1ODM1MzI0NDljYTZkMmQwODNhN2YxMTUxMCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJ6ZG4iOiJpbm5vdmF0b3IiLCJzZXJ2aWNlaW5zdGFuY2VpZCI6ImNkZTA3NTU0LTUyNTItNDlhZS05ODQyLWUxOTM5Y2UzYmJmOCJ9LCJzdWIiOiJzYi1jZGUwNzU1NC01MjUyLTQ5YWUtOTg0Mi1lMTkzOWNlM2JiZjghYjQwMzR8bmEtNDIwYWRmYzktZjk2ZS00MDkwLWE2NTAtMDM4Njk4OGI2N2UwIWIxODM2IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jZGUwNzU1NC01MjUyLTQ5YWUtOTg0Mi1lMTkzOWNlM2JiZjghYjQwMzR8bmEtNDIwYWRmYzktZjk2ZS00MDkwLWE2NTAtMDM4Njk4OGI2N2UwIWIxODM2IiwiY2lkIjoic2ItY2RlMDc1NTQtNTI1Mi00OWFlLTk4NDItZTE5MzljZTNiYmY4IWI0MDM0fG5hLTQyMGFkZmM5LWY5NmUtNDA5MC1hNjUwLTAzODY5ODhiNjdlMCFiMTgzNiIsImF6cCI6InNiLWNkZTA3NTU0LTUyNTItNDlhZS05ODQyLWUxOTM5Y2UzYmJmOCFiNDAzNHxuYS00MjBhZGZjOS1mOTZlLTQwOTAtYTY1MC0wMzg2OTg4YjY3ZTAhYjE4MzYiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6ImFhYTAxMzAxIiwiaWF0IjoxNTQxMDA1NDU3LCJleHAiOjE1NDEwNDg2NTcsImlzcyI6Imh0dHA6Ly9pbm5vdmF0b3IubG9jYWxob3N0OjgwODAvdWFhL29hdXRoL3Rva2VuIiwiemlkIjoiZmI2MDhmMjUtOGNkYy00M2MzLWJmZDItODU3MDA5ZWUyNDhhIiwiYXVkIjpbInVhYSIsInNiLWNkZTA3NTU0LTUyNTItNDlhZS05ODQyLWUxOTM5Y2UzYmJmOCFiNDAzNHxuYS00MjBhZGZjOS1mOTZlLTQwOTAtYTY1MC0wMzg2OTg4YjY3ZTAhYjE4MzYiXX0.W-mJUxzZJLs-xOFROmshf-GYUxYflOtj75lAr42aGVHZRa-vIyex8CX-Zb9gX-pT5kq1xwVrojVk_fOWTXXWAtxCSTlHpwzB_g29Loc0eRQYOFK3w_upZZycGW47E6iXtVpFlQkXB1HbJJ2obLSpTWHWINfu4BSCDzexoYrNHCP9kr_cLYWEVy-eUEKeHCaVGXCYfq4tDIsaEtsNJSIbtTQpEdZCtiob2Ev5itsIbRjl8WMJpTD8tAHuJRx8YiB_26Wqfl3aGa5sqwKBpO0Ntlw8-TJ69Mu_FkzSg1jGODWf-bUetlztEIfsKc8abaayu8f5_YCh7eZCvKEEuRnnhNdAn1H9hEthG5yNe6mW9BjbNcsoX3006VDTp5a6DsGxN3HBAerhib5oWkTuwyoIZROEjMYbFlAf4NfYNJMYy_EDTvTM8sFB-Ji_aMmLGgHlyVpR8eiG3e0k4RErLLyh_xWxbwsTpVbmgCdF5Q9bWdBH3HWHj1mpdlpK2jC_mH8iV4fArbat38dTuHexFzWz1sX8UfOh4MzK5hkVJlPgpnRhDO89U4lCljRQ0q4SjzlId9FMM800mxFBO9buSU6LQ04xNoqSLplO4wvCKAKCjSZJhwtdp4mIH6KuOGyu5JvUUCXPN9k0K7nOe2AMzUtx-NF5EwifSqyFAR3spTVgpYU',
+				    'Content-type': 'application/x-www-form-urlencoded'
+				  },
+				  form: 'placa='+ info.PLACA +'&idlugar='+info.ID_SPOT+'&fechahorainicio='+fecha1.toISOString()+'&fechahorafin='+fecha2.toISOString()+'&estatus='+info.ESTATUS+'&usuario='+req.body.NOMBRE_USUARIO
+				};
+
+				request(options,function(error,response,body){
+					console.log(options);
+					res.send({"resultado":"success","id_reserva":data.d.ID_RESERVA}); 
+
+				});
 			}, function(status, error){
 				console.error(status + " " + error);
 				res.send({"resultado":"error"});  

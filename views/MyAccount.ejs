@@ -46,12 +46,13 @@
   </nav>
 
 
- <div class="container">
+ <div class="container-fluid">
   <div class="row">
     <div class="col-lg-3">
       <span id="foto">
       <img class="rounded-circle" src="" id="ImagenUsuario" alt="Generic placeholder image" width="140" height="140">
       </span>
+            <button data-toggle="modal" data-target="#modalUploadPhoto" role="button" class="btn btn-sm"><i class="fas fa-edit"></i></button>
             <h3><span id="NombreUsuario">Jonathan Alejandro Aguilar Morales</span></h3>
             <p id="CorreoUsuario">Jonathan.aguilar@sap.com</p>
             <p id="NivelUsuario"><i class="fas fa-chess-king"></i>  Master Driver</span></p>
@@ -359,6 +360,38 @@
   </div>
 </div>
 
+<!-- modal de edición de imagen -->
+
+<div class="modal fade" id="modalUploadPhoto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal">Please upload the 3 required photos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body text-center">
+        <div class="text-center" id="MensajeModalConfirmacion"> 
+        <h5>We require 3 photos of your face, for the facial recognition to work:</h5>
+      </div>
+      <br>
+        <input type="file" name="file" accept="image/*" onchange="uploadFile">
+      </div>
+      <div class="modal-body text-center">
+        <input type="file" name="file" accept="image/*" onchange="uploadFile">
+      </div>
+      <div class="modal-body text-center">
+        <input type="file" name="file" accept="image/*" onchange="uploadFile">
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="Close_modal_photo" class="btn btn-primary" data-dismiss="modal" onclick="cargarImagen();return false">UPLOAD!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   </body>
 
 <script type="text/javascript" src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
@@ -449,3 +482,9 @@
       }
 
 </script>
+
+<script src="/js/webchat.js"
+channelId="f6d81819-e26a-4e98-b071-57f9b93b21fb"
+token="69bfbba9b767522a218ebd8192860d24"
+id="recast-webchat"
+></script>

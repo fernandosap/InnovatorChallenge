@@ -1,5 +1,7 @@
-.container{
-	margin-top: 3%;
+.container-fluid{
+	margin-top: 4% !important;
+	max-width: 1400px !important;
+    /*margin-top: 80px;*/
 }
 
 #foto{
@@ -111,4 +113,3 @@ padding: 6px 12px;
 .modal-backdrop{
     z-index: 10 !important;        
 }​
-
