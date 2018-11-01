@@ -57,8 +57,8 @@
             <p id="CorreoUsuario">Jonathan.aguilar@sap.com</p>
             <p id="NivelUsuario"><i class="fas fa-chess-king"></i>  Master Driver</span></p>
             <p id="PuntosUsuario">800 pts</p>
-            <p id="AgregarNuevoSpot"><a class="btn btn-success" data-toggle="modal" data-target="#modalCreacionSpot" role="button">Register new spot</a></p>
-            <p><button id="AgregarNuevoVehiculo" class="btn btn-primary" data-toggle="modal" data-target="#modalCreacionVehiculo" role="button">Register new Vehicle</button></p>
+            <p id="AgregarNuevoSpot"><a class="btn btn-success" data-toggle="modal" data-target="#modalCreacionSpot" role="button" onclick="AgregarNuevoSpot();return false">Register new spot</a></p>
+            <p><button id="AgregarNuevoVehiculo" class="btn btn-primary" data-toggle="modal" data-target="#modalCreacionVehiculo" onclick="AgregarNuevoVehiculo();return false" role="button">Register new Vehicle</button></p>
     </div>
     <div class="col-lg-9">
         <h3>Reservations</h3>
@@ -187,7 +187,7 @@
                     placeholder="Enter a location" required>
               </div>
             </div>
-            <div id="map" style="width:auto; height:200px"></div>
+            <div id="map" style="width:auto; height:300px"></div>
             <div id="infowindow-content">
               <img src="" width="16" height="16" id="place-icon">
               <span id="place-name"  class="title"></span><br>
@@ -198,7 +198,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmarCreacionSpot" type="button" class="btn btn-primary">Save</button>
+        <button id="confirmarCreacionSpot" type="button" class="btn btn-primary" onclick="confirmarCreacionSpot();return false">Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -212,18 +212,18 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tituloModal">Please Confirm</h5>
+        <h5 class="modal-title" id="tituloModal">Congratulations</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="text-center"> 
-          <p><b id="MensajeModalConfirmacion">You are sure you want to add the spot?</b></p>
+          <p><b id="MensajeModalConfirmacionSpot">You are sure you want to add the spot?</b></p>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="Close_modal_confirmacion_spot" class="btn btn-secondary" data-dismiss="modal">YES CREATE IT!</button>
+        <button type="button" id="Close_modal_confirmacion_spot" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -307,7 +307,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="confirmarCreacionVehiculo" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmacion">Save</button>
+        <button id="confirmarCreacionVehiculo" type="button" class="btn btn-primary" onclick="ConfirmarCreacionVehiculo();return false">Save</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -327,11 +327,11 @@
       </div>
       <div class="modal-body">
         <div class="text-center"> 
-          <p><b id="MensajeModalConfirmacion">Your car was added succesfully!</b></p>
+          <p><b id="MensajeModalConfirmacionVehiculo"></b></p>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="Close_modal_confirmacion" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="Close_modal_confirmacion_vehiculo" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -350,7 +350,7 @@
       </div>
       <div class="modal-body">
         <div class="text-center"> 
-          <p><b id="MensajeModalConfirmacion">You are sure you want to delete the vehicle?</b></p>
+          <p><b id="MensajeModalConfirmacionConfirmacion"></b></p>
         </div>
       </div>
       <div class="modal-footer">
@@ -386,6 +386,7 @@
         <input type="file" name="file3" id="image_upload3" accept="image/*" onchange="">
       </div> -->
       <div class="modal-footer">
+        <p id="Estatus_carga"></p>
         <button type="button" id="Close_modal_photo0" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalUploadPhoto2" disabled>Next!</button>
       </div>
     </div>
@@ -418,6 +419,7 @@
         <input type="file" name="file3" id="image_upload3" accept="image/*" onchange="">
       </div> -->
       <div class="modal-footer">
+        <p id="Estatus_carga2"></p>
         <button type="button" id="Close_modal_photo1" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalUploadPhoto3" disabled>Next!</button>
       </div>
     </div>
@@ -450,7 +452,8 @@
         <input type="file" name="file3" id="image_upload3" accept="image/*" onchange="">
       </div> -->
       <div class="modal-footer">
-        <button type="button" id="Close_modal_photo2" class="btn btn-primary" data-dismiss="modal" disabled>Next!</button>
+        <p id="Estatus_carga3"></p>
+        <button type="button" id="Close_modal_photo2" class="btn btn-primary" data-dismiss="modal" disabled>Finish!</button>
       </div>
     </div>
   </div>

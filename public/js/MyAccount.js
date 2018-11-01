@@ -70,11 +70,11 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
     }
 });
 
-$("#AgregarNuevoVehiculo").on('click',function(){
+function AgregarNuevoVehiculo(){
   $("#input_usuario").val(usuario.NOMBRE + " "  + usuario.APELLIDO);
-});
+};
 
-$("#confirmarCreacionVehiculo").on('click',function(){
+function ConfirmarCreacionVehiculo(){
   info = {
       "ID_USUARIO": usuario.ID_USUARIO,
       "MARCA": $("#dropdown_brand").val(),
@@ -87,27 +87,27 @@ $.post("/CrearCoche",{"info":info},function(result){
     resultado = result.resultado;
     if (resultado == "success"){
         console.log(resultado);
-        mensaje = "Tu vehiculo se creó de manera exitosa.";
+        mensaje = "Your vehicle was added successfully";
         console.log(mensaje);
       } else {
         mensaje = "Hubo un error en tu reservación. Inténtalo de nuevo más tarde."
       }
       console.log("Se realizó el post satisfactoriamente.");
       $("#modalCreacionVehiculo").modal('hide');
-      $("#MensajeModalConfirmacion").html(mensaje);
+      $("#MensajeModalConfirmacionVehiculo").text(mensaje);
       $("#modalConfirmacionVehiculo").modal('show');
-      $("#Close_modal_confirmacion").on('click',function(){
+      $("#Close_modal_confirmacion_vehiculo").on('click',function(){
         location.reload();
       });
 
   });
-});
+};
 
-$("#AgregarNuevoSpot").on('click',function(){
+function AgregarNuevoSpot(){
   $("#input_usuario_spot").val(usuario.NOMBRE + " "  + usuario.APELLIDO);
-});
+};
 
-$("#confirmarCreacionSpot").on('click',function(){
+function confirmarCreacionSpot(){
   if($("#pac-input").val()==""){
     alert("It is necessary to have a valid address");
   } else {
@@ -119,9 +119,9 @@ $("#confirmarCreacionSpot").on('click',function(){
           mensaje = "Tu Spot se ha agregado de manera exitosa";
           console.log("Se realizó el post satisfactoriamente.");
           $("#modalCreacionSpot").modal('hide');
-          $("#MensajeModalConfirmacion").html(mensaje);
-          $("#modalConfirmacionVehiculo").modal('show');
-          $("#Close_modal_confirmacion").on('click',function(){
+          $("#MensajeModalConfirmacionSpot").text("Your spot has been saved successfully");
+          $("#modalConfirmacionCreacionSpot").modal('show');
+          $("#Close_modal_confirmacion_spot").on('click',function(){
             location.reload();
           });
         } else {
@@ -129,31 +129,35 @@ $("#confirmarCreacionSpot").on('click',function(){
         }
     });
   }
-});
+};
 
 function EliminarObjeto(tabla,id_objeto){
   if(tabla == 1 || tabla == 2){
     tabla_eliminar = "reservas";
+    texto_mensaje = "reservation"
   } else if(tabla == 3 ){
     tabla_eliminar = "vehiculos";
+    texto_mensaje = "vehicle"
   } else if(tabla == 4 ){
     tabla_eliminar = "spots";
+    texto_mensaje = "spot"
   };
   console.log(tabla_eliminar);
+  mensaje_confirmacion = "You are sure you want to delete this " + texto_mensaje; 
+  $("#MensajeModalConfirmacionConfirmacion").text(mensaje_confirmacion);
   $("#modalConfirmacionVehiculoEliminado").modal('show');
   $("#Close_modal_confirmacion_eliminado").on('click',function(){ 
     console.log(tabla + " " + id_objeto);
     $.post('/EliminarObjeto', {"tabla":tabla_eliminar, "id_objeto":id_objeto}, function(result){
       var resultado = result.resultado;
-      mensaje = resultado;
+      mensaje = "Your " + texto_mensaje + " was deleted successfully";
       console.log(resultado);
       if (resultado == "success"){
-          mensaje = "Tu " + tabla + " se eliminó de manera exitosa.";
           console.log("Se realizó el post satisfactoriamente.");
           $("#modalConfirmacionVehiculoEliminado").modal('hide');
-          $("#MensajeModalConfirmacion").html(mensaje);
+          $("#MensajeModalConfirmacionVehiculo").text(mensaje);
           $("#modalConfirmacionVehiculo").modal('show');
-          $("#Close_modal_confirmacion").on('click',function(){
+          $("#Close_modal_confirmacion_vehiculo").on('click',function(){
             location.reload();
           });
         } else {
@@ -166,26 +170,30 @@ function EliminarObjeto(tabla,id_objeto){
 function ConfirmarObjeto(tabla,id_objeto){
   if(tabla == 1 || tabla == 2){
     tabla_confirmar = "reservas";
+    texto_mensaje = "reservation"
   } else if(tabla == 3 ){
     tabla_confirmar = "vehiculos";
+    texto_mensaje = "vehicle"
   } else if(tabla == 4 ){
     tabla_confirmar = "spots";
+    texto_mensaje = "spot"
   };
   console.log(tabla_confirmar);
+  mensaje_confirmacion = "You are sure you want to confirm this " + texto_mensaje; 
+  $("#MensajeModalConfirmacionConfirmacion").text(mensaje_confirmacion);
   $("#modalConfirmacionVehiculoEliminado").modal('show');
   $("#Close_modal_confirmacion_eliminado").on('click',function(){ 
     console.log(tabla + " " + id_objeto);
     $.post('/ConfirmarObjeto', {"tabla":tabla_confirmar, "id_objeto":id_objeto}, function(result){
       var resultado = result.resultado;
-      mensaje = resultado;
+      mensaje = "Your " + texto_mensaje + " was confirmed successfully";
       console.log(resultado);
       if (resultado == "success"){
-          mensaje = "Tu " + tabla + " se eliminó de manera exitosa.";
           console.log("Se realizó el post satisfactoriamente.");
           $("#modalConfirmacionVehiculoEliminado").modal('hide');
-          $("#MensajeModalConfirmacion").html(mensaje);
+          $("#MensajeModalConfirmacionVehiculo").html(mensaje);
           $("#modalConfirmacionVehiculo").modal('show');
-          $("#Close_modal_confirmacion").on('click',function(){
+          $("#Close_modal_confirmacion_vehiculo").on('click',function(){
           location.reload();
           });
         } else {
@@ -211,10 +219,16 @@ function cargarImagen(image){
     var percentComplete = parseInt(100.0 * evt.loaded / evt.total);
     // Upload in progress. Do something here with the percent complete.
     console.log(percentComplete);
+    $("#Estatus_carga").text("Uploading percentage: " + percentComplete + "%");
+    $("#Estatus_carga2").text("Uploading percentage: " + percentComplete + "%");
+    $("#Estatus_carga3").text("Uploading percentage: " + percentComplete + "%");
   };
    
   xhr.onload = function() {
     if (xhr.status === 200) {
+      $("#Estatus_carga").text("");
+      $("#Estatus_carga2").text("");
+      $("#Estatus_carga3").text("");
       $('#Close_modal_photo' + contador_imagenes).prop('disabled', false);
       contador_imagenes = contador_imagenes + 1;
       var fileInfo = JSON.parse(xhr.response);
@@ -272,15 +286,16 @@ function cargarImagen(image){
                 mensaje = "Hubo un error. Inténtalo de nuevo más tarde."
               }
           });
-         } else {
-          location.reload();
-         }
+         };
       }
       // Upload succeeded. Do something here with the file info.
     }
     else {
       var errorMessage = xhr2.response || 'Unable to upload file';
       console.log(errorMessage);
+      if(contador_imagenes==3){
+          location.reload();
+      }
       // Upload failed. Do something here with the error.
     }
   };
@@ -291,5 +306,8 @@ function resetImage(){
  $('#Close_modal_photo0').prop('disabled', true);
  $('#Close_modal_photo1').prop('disabled', true);
  $('#Close_modal_photo2').prop('disabled', true);
+ $("#Estatus_carga").text("");
+ $("#Estatus_carga2").text("");
+ $("#Estatus_carga3").text("");
 }
 
