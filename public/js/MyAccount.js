@@ -5,6 +5,7 @@ var reservas = [];
 var reservas2 = [];
 var spots = [];
 var imagenes = [];
+var contador_imagenes = 0;
 
 $("#NombreUsuario").text(usuario.NOMBRE + " " + usuario.APELLIDO);
 $("#CorreoUsuario").text(usuario.EMAIL);
@@ -209,10 +210,13 @@ function cargarImagen(image){
   xhr.upload.onprogress = function(evt) {
     var percentComplete = parseInt(100.0 * evt.loaded / evt.total);
     // Upload in progress. Do something here with the percent complete.
+    console.log(percentComplete);
   };
    
   xhr.onload = function() {
     if (xhr.status === 200) {
+      $('#Close_modal_photo' + contador_imagenes).prop('disabled', false);
+      contador_imagenes = contador_imagenes + 1;
       var fileInfo = JSON.parse(xhr.response);
       console.log(fileInfo);
       // Upload succeeded. Do something here with the file info.
@@ -220,7 +224,6 @@ function cargarImagen(image){
       xhr2.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
       xhr2.setRequestHeader('Content-Type', 'application/json');
       var body = '{"path": "'+fileInfo.path_lower+'","settings": {"requested_visibility":"public"}}';
-      console.log(body);
       xhr2.send(body);
     }
     else {
@@ -239,7 +242,7 @@ function cargarImagen(image){
   xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
   xhr.setRequestHeader('Content-Type', 'application/octet-stream');
   xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-    path: '/'+ carpeta +'/' +  image[0].name,
+    path: '/'+ carpeta +'/' +  '000'+contador_imagenes+'.jpg',
     mode: 'overwrite',
     autorename: false,
     mute: false
@@ -252,7 +255,10 @@ function cargarImagen(image){
       var fileInfo2 = JSON.parse(xhr2.response);
       console.log(fileInfo2);
       imagenes[imagenes.length] = fileInfo2.url
-      if(imagenes.length==3){
+      if(contador_imagenes==3){
+        console.log("Contador_restaurado");
+        contador_imagenes = 0;
+        if(imagenes.length==3){
         console.log("Enviando imagenes a servidor");
          $.post('/ActualizarImagenes', {"imagenes":imagenes, "id_usuario":usuario.ID_USUARIO}, function(result){
           console.log(imagenes);
@@ -266,6 +272,7 @@ function cargarImagen(image){
                 mensaje = "Hubo un error. Inténtalo de nuevo más tarde."
               }
           });
+         }
       }
       // Upload succeeded. Do something here with the file info.
     }
@@ -277,7 +284,10 @@ function cargarImagen(image){
   };
 };
 
-function actualizarImagenes(){
- 
+function resetImage(){
+ contador_imagenes = 0;
+ $('#Close_modal_photo0').prop('disabled', true);
+ $('#Close_modal_photo1').prop('disabled', true);
+ $('#Close_modal_photo2').prop('disabled', true);
 }
 

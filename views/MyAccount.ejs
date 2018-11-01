@@ -52,7 +52,7 @@
       <span id="foto">
       <img class="rounded-circle" src="" id="ImagenUsuario" alt="Generic placeholder image" width="140" height="140">
       </span>
-            <button data-toggle="modal" data-target="#modalUploadPhoto" role="button" class="btn btn-sm"><i class="fas fa-edit"></i></button>
+            <button onclick="resetImage();return false" data-toggle="modal" data-target="#modalUploadPhoto" role="button" class="btn btn-sm"><i class="fas fa-edit" ></i></button>
             <h3><span id="NombreUsuario">Jonathan Alejandro Aguilar Morales</span></h3>
             <p id="CorreoUsuario">Jonathan.aguilar@sap.com</p>
             <p id="NivelUsuario"><i class="fas fa-chess-king"></i>  Master Driver</span></p>
@@ -386,7 +386,7 @@
         <input type="file" name="file3" id="image_upload3" accept="image/*" onchange="">
       </div> -->
       <div class="modal-footer">
-        <button type="button" id="Close_modal_photo" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalUploadPhoto2">Next!</button>
+        <button type="button" id="Close_modal_photo0" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalUploadPhoto2" disabled>Next!</button>
       </div>
     </div>
   </div>
@@ -418,7 +418,7 @@
         <input type="file" name="file3" id="image_upload3" accept="image/*" onchange="">
       </div> -->
       <div class="modal-footer">
-        <button type="button" id="Close_modal_photo" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalUploadPhoto3">Next!</button>
+        <button type="button" id="Close_modal_photo1" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#modalUploadPhoto3" disabled>Next!</button>
       </div>
     </div>
   </div>
@@ -450,7 +450,7 @@
         <input type="file" name="file3" id="image_upload3" accept="image/*" onchange="">
       </div> -->
       <div class="modal-footer">
-        <button type="button" id="Close_modal_photo" class="btn btn-primary" data-dismiss="modal" onclick="actualizarImagenes(); return false">Next!</button>
+        <button type="button" id="Close_modal_photo2" class="btn btn-primary" data-dismiss="modal" disabled>Next!</button>
       </div>
     </div>
   </div>
