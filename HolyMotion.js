@@ -179,6 +179,53 @@ app.post('/ConfirmarObjeto', function(req, res){
 	})
 });
 
+app.post('/ActualizarImagenes', function(req, res){
+	imagenes = req.body.imagenes;
+	id_usuario = req.body.id_usuario;
+	console.log(imagenes);
+
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=ID_USUARIO eq " + id_usuario
+	o(url).get(function(data){
+		usuario = data.d.results;
+		// opciones para configuración del DELETE
+		var options = {
+		    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios(" + id_usuario +")",
+		    method: 'PUT',
+		    auth: {
+		    'user': 'i848070',
+		    'pass': 'WelcomeWelcome1.'
+			},
+			json: {
+				ID_USUARIO: usuario[0].ID_USUARIO,
+				NOMBRE: usuario[0].NOMBRE,
+				APELLIDO: usuario[0].APELLIDO,
+				ID_LUGAR: usuario[0].ID_LUGAR,
+				DIRECCION: usuario[0].DIRECCION,
+				EMAIL: usuario[0].EMAIL,
+				TELEFONO: usuario[0].TELEFONO,
+				PASSWORD: usuario[0].PASSWORD,
+				IMAGE_CONTENT1: usuario[0].IMAGE_CONTENT1,
+				IMAGE_CONTENT2: usuario[0].IMAGE_CONTENT2,
+				IMAGEN_1: imagenes[0],
+				IMAGEN_2: imagenes[1],
+				IMAGEN_3: imagenes[2]
+			}
+		};
+
+		console.log(options.url);
+
+		request(options, function (error, response, body) {
+		    if (!error && response.statusCode == 204) {
+		       console.log("Imagenes y usuario actualizado");
+		    } else {
+		    	console.log("El error de respuesta de confirmar es: " + error);
+		    	res.send({"resultado":"fail"}); 
+		    };
+		});
+
+	})
+});
+
 app.post('/CrearSpot', function(req,res){
 	// id de vehiculo, id de usuario, marca, anio, placa y el color
 	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$select=ID_SPOT&$orderby=ID_SPOT%20desc&$top=1"

@@ -4,12 +4,16 @@ var usuario = JSON.parse(miStorage.user)
 var reservas = [];
 var reservas2 = [];
 var spots = [];
+var imagenes = [];
 
 $("#NombreUsuario").text(usuario.NOMBRE + " " + usuario.APELLIDO);
 $("#CorreoUsuario").text(usuario.EMAIL);
 
 $.post("/obtenerImagenesUsuario",{id_usuario:usuario.ID_USUARIO}, function(result) {
-      $("#ImagenUsuario").attr('src',result.foto1);
+      foto_usuario = result.foto1;
+      foto_usuario = foto_usuario.replace('www','dl');
+      foto_usuario = foto_usuario.replace('?dl=0','');
+      $("#ImagenUsuario").attr('src',foto_usuario);
 });
 
 $.post("/consultarReservas",{id_usuario:usuario.ID_USUARIO},function(result){
@@ -200,6 +204,7 @@ function cargarImagen(image){
  var dropboxToken = 'G8yo7qskgYAAAAAAAAAAKZNbGFrkMNPKXN76oP4BFwRNLPwTzsYcPLtBzlPMZm0i';
   
   var xhr = new XMLHttpRequest();
+  var xhr2 = new XMLHttpRequest();
    
   xhr.upload.onprogress = function(evt) {
     var percentComplete = parseInt(100.0 * evt.loaded / evt.total);
@@ -209,24 +214,70 @@ function cargarImagen(image){
   xhr.onload = function() {
     if (xhr.status === 200) {
       var fileInfo = JSON.parse(xhr.response);
+      console.log(fileInfo);
       // Upload succeeded. Do something here with the file info.
+      xhr2.open('POST', 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings');
+      xhr2.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
+      xhr2.setRequestHeader('Content-Type', 'application/json');
+      var body = '{"path": "'+fileInfo.path_lower+'","settings": {"requested_visibility":"public"}}';
+      console.log(body);
+      xhr2.send(body);
     }
     else {
       var errorMessage = xhr.response || 'Unable to upload file';
+      console.log(errorMessage);
       // Upload failed. Do something here with the error.
     }
   };
-   
+  
+  carpeta = String(usuario.NOMBRE).trim() + String(usuario.APELLIDO).trim();
+  carpeta = carpeta.replace(/\s/g, '');
+  carpeta = carpeta.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
+  console.log(carpeta);
   xhr.open('POST', 'https://content.dropboxapi.com/2/files/upload');
   xhr.setRequestHeader('Authorization', 'Bearer ' + dropboxToken);
   xhr.setRequestHeader('Content-Type', 'application/octet-stream');
   xhr.setRequestHeader('Dropbox-API-Arg', JSON.stringify({
-    path: '/Test/' +  image[0].name,
-    mode: 'add',
-    autorename: true,
+    path: '/'+ carpeta +'/' +  image[0].name,
+    mode: 'overwrite',
+    autorename: false,
     mute: false
   }));
-   
+
   xhr.send(image[0]);
+   
+  xhr2.onload = function() {
+    if (xhr2.status === 200) {
+      var fileInfo2 = JSON.parse(xhr2.response);
+      console.log(fileInfo2);
+      imagenes[imagenes.length] = fileInfo2.url
+      if(imagenes.length==3){
+        console.log("Enviando imagenes a servidor");
+         $.post('/ActualizarImagenes', {"imagenes":imagenes, "id_usuario":usuario.ID_USUARIO}, function(result){
+          console.log(imagenes);
+            var resultado = result.resultado;
+            mensaje = resultado;
+            console.log(resultado);
+            if (resultado == "success"){
+                console.log("Se realizó el post satisfactoriamente.");
+                location.reload();
+              } else {
+                mensaje = "Hubo un error. Inténtalo de nuevo más tarde."
+              }
+          });
+      }
+      // Upload succeeded. Do something here with the file info.
+    }
+    else {
+      var errorMessage = xhr2.response || 'Unable to upload file';
+      console.log(errorMessage);
+      // Upload failed. Do something here with the error.
+    }
+  };
 };
+
+function actualizarImagenes(){
+ 
+}
 
