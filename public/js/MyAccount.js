@@ -119,9 +119,8 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
                 } else if(alerts[i].ID_ALERTA==4){
                   alerta_desc = "Door Open";
                   priority = "High";
+                  $("#tabla_alert_my_spots").append('<tr><th scope="row">' + alerts[i].ID_ALERTA + '</th><td>' + alerts[i].ID_SPOT + '</td>' + '<td>' + priority + '</td>' + '<td>' + alerta_desc + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + alerts[i].PLACA + '); return false" href="#" role="button">Delete</a></td></tr>');
                 };
-
-                $("#tabla_alert_my_spots").append('<tr><th scope="row">' + alerts[i].ID_ALERTA + '</th><td>' + alerts[i].ID_SPOT + '</td>' + '<td>' + priority + '</td>' + '<td>' + alerta_desc + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + alerts[i].PLACA + '); return false" href="#" role="button">Delete</a></td></tr>');
            }
        });
      }
