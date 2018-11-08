@@ -310,11 +310,11 @@ app.post('/consultarSpots',function(req,res){
 })
 
 app.post('/consultarAlertas',function(req,res){
-id_usuario = req.body.id_usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/alertas?$filter=ID_USUARIO eq " + id_usuario
+	id_spot = req.body.id_spot;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/alertasspots?$filter=ID_SPOT eq " + id_spot;
 	o(url).get(function(data){
 		alertas = data.d.results;
-		console.log("El resultado de consultar reservas: " + alertas);
+		console.log(alertas);
 		res.send({"alerts":alertas});
 	})
 });

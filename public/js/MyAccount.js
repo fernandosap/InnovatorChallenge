@@ -40,6 +40,7 @@ $.post("/obtenerImagenesUsuario",{id_usuario:usuario.ID_USUARIO}, function(resul
       $("#ImagenUsuario").attr('src',foto_usuario);
 });
 
+// trae info de las reservas hechas por este usuario
 $.post("/consultarReservas",{id_usuario:usuario.ID_USUARIO},function(result){
       reservas = result.reservas;
       // console.log(reservas);
@@ -50,6 +51,7 @@ $.post("/consultarReservas",{id_usuario:usuario.ID_USUARIO},function(result){
     }
 });
 
+// trae info de las reservas de los spots de este usuario
 $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
       spots = result.spots;
       for(i=0; i<spots.length ;i++){
@@ -74,7 +76,7 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
       }
 });
 
-
+// Trae la info de los coches del usuario
 $.post("/consultarCoches",{id_usuario:usuario.ID_USUARIO},function(result){
       vehiculos = result.vehiculos;
       var tabla = "vehiculos";
@@ -84,6 +86,7 @@ $.post("/consultarCoches",{id_usuario:usuario.ID_USUARIO},function(result){
     }
 });
 
+// Trae la info de los spots de este usuario
 $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
       spots = result.spots;
       var tabla = "spots";
@@ -93,14 +96,37 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
     }
 });
 
-// $.post("/consultarAlertas",{id_usuario:usuario.ID_USUARIO},function(result){
-//       alerts = result.alerts;
-//       var tabla = "alerts";
-//       console.log(alerts);
-//       for(i=0; i < alerts.length ;i++){
-//         $("#tabla_alert_my_spots").append('<tr><th scope="row">' + alerts[i].ID_ALERT + '</th><td>' + alerts[i].DIRECCION + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + alerts[i].ID_SPOT + '); return false" href="#" role="button">Delete</a></td></tr>');
-//     }
-// });
+// Trae la info de las alertas de los spots de este usuario
+$.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
+      spots = result.spots;
+      console.log("Empezando con la revision de las alertas");
+      console.log(spots);
+      for(i=0; i<spots.length ;i++){
+        if(spots[i].ID_SPOT !=='undefined'){
+        id_spot = spots[i].ID_SPOT;
+        $.post("/consultarAlertas",{id_spot:id_spot},function(result){
+              alerts = result.alerts;
+              for(i=0; i < alerts.length ;i++){
+                if(alerts[i].ID_ALERTA==1){
+                  alerta_desc = "Vehicle ocuppying empty spot";
+                  priority = "Medium";
+                } else if(alerts[i].ID_ALERTA==2){
+                  alerta_desc = "Not the correct vehicle parked";
+                  priority = "Low";
+                } else if(alerts[i].ID_ALERTA==3){
+                  alerta_desc = "Time Exceeded";
+                  priority = "Low";
+                } else if(alerts[i].ID_ALERTA==4){
+                  alerta_desc = "Door Open";
+                  priority = "High";
+                };
+
+                $("#tabla_alert_my_spots").append('<tr><th scope="row">' + alerts[i].ID_ALERTA + '</th><td>' + alerts[i].ID_SPOT + '</td>' + '<td>' + priority + '</td>' + '<td>' + alerta_desc + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + alerts[i].PLACA + '); return false" href="#" role="button">Delete</a></td></tr>');
+           }
+       });
+     }
+   }
+});
 
 
 function AgregarNuevoVehiculo(){
