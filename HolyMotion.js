@@ -309,6 +309,16 @@ app.post('/consultarSpots',function(req,res){
 	})
 })
 
+app.post('/consultarAlertas',function(req,res){
+id_usuario = req.body.id_usuario;
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/alertas?$filter=ID_USUARIO eq " + id_usuario
+	o(url).get(function(data){
+		alertas = data.d.results;
+		console.log("El resultado de consultar reservas: " + alertas);
+		res.send({"alerts":alertas});
+	})
+});
+
 app.post('/SignUp', function(req,res){
 	array = req.body.signup_array;
 	email = array[2];
@@ -507,6 +517,26 @@ app.post('/obtenerImagenesUsuario', function(req,res){
 		foto2 = usuario.IMAGEN_2;
 		res.send({"foto1":foto1,"foto2":foto2});
 	})
+});
+
+app.post('/ConsultarEstatusPuerta',function(req,res){
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/checkparking/checkdoorstatus.xsjs?ir=1&is=1";
+	o(url).get(function(data){
+		estatus = data;
+		console.log("La puerta se encuentra en estatus: " + estatus);
+		res.send({"resultado":estatus});
+	});
+});
+
+app.post('/AbrirCerrarPuerta', function(req,res){
+	abrirocerrar = req.body.id_cerrado
+	console.log("Valor a colocar en la tabla de la puerta = " + abrirocerrar);
+	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/checkparking/changedoorstatus.xsjs?ir=1&is=1&es=" + abrirocerrar;
+	o(url).get(function(data){
+		console.log(data);
+		estatus = data;
+		res.send({"resultado":estatus});
+	});
 });
 
 // Servicios para recast -> Consultar spots y crear una reserva. 

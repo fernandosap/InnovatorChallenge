@@ -6,9 +6,32 @@ var reservas2 = [];
 var spots = [];
 var imagenes = [];
 var contador_imagenes = 0;
+var id_cerrado;
 
 $("#NombreUsuario").text(usuario.NOMBRE + " " + usuario.APELLIDO);
 $("#CorreoUsuario").text(usuario.EMAIL);
+
+$.post('/ConsultarEstatusPuerta',function(result){
+  resultado = result.resultado
+  
+  if(resultado == 0){
+    id_cerrado = 1;
+    console.log("Puerta Cerrada");
+    $("#BotonPuerta").text("Open Door");
+    $("#BotonPuerta").removeClass("btn-secondary").addClass("btn-warning");
+    $("#BotonPuerta").on('click',puerta);
+    // Checar como agregar una clase para el color del boton y el onclick 
+  } else if (resultado == 1) {
+    id_cerrado = 0;
+    console.log("Puerta Abierta");
+    $("#BotonPuerta").text("Close Door");
+    $("#BotonPuerta").removeClass("btn-secondary").addClass("btn-danger");
+    $("#BotonPuerta").on('click',puerta);
+    // Checar como agregar una clase para el color del boton y el onclick 
+  } else {
+    console.log("No hay resultado de la puerta");
+  };
+});
 
 $.post("/obtenerImagenesUsuario",{id_usuario:usuario.ID_USUARIO}, function(result) {
       foto_usuario = result.foto1;
@@ -19,7 +42,7 @@ $.post("/obtenerImagenesUsuario",{id_usuario:usuario.ID_USUARIO}, function(resul
 
 $.post("/consultarReservas",{id_usuario:usuario.ID_USUARIO},function(result){
       reservas = result.reservas;
-      console.log(reservas);
+      // console.log(reservas);
       if(reservas.length>0){
       for(i=0; i < reservas.length ;i++){
         $("#tabla_reservas").append('<tr><th scope="row">' + reservas[i].ID_RESERVA + '</th><td>' + reservas[i].UBICACION_DESC + '</td><td>' + reservas[i].FECHA_INICIO + '</td><td>' + reservas[i].FECHA_FIN + '</td><td> ' + reservas[i].HORA_INICIO + '</td><td> ' + reservas[i].HORA_FIN + '</td><td>$' + Math.floor(Math.random()*100) + '</td><td>' + reservas[i].PLACA + '</td><td>' + reservas[i].ESTATUS + '</td><td><p><a class="btn btn-danger" onclick="EliminarObjeto(1,' + reservas[i].ID_RESERVA + '); return false" href="#"" role="button">Delete</a></td></tr>');
@@ -31,12 +54,12 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
       spots = result.spots;
       for(i=0; i<spots.length ;i++){
         if(spots[i].ID_SPOT !=='undefined'){
-        console.log("Se encontro el id de spot, siguiendo");
+        // console.log("Se encontro el id de spot, siguiendo");
         id_spot = spots[i].ID_SPOT;
           $.post("/consultarReservasPorSpot",{spot_id:id_spot},function(result){
             reservas2 = result.reservas;
-            console.log("Imprimiendo la información de las reservas para segunda tabla");
-            console.log(reservas2);
+            // console.log("Imprimiendo la información de las reservas para segunda tabla");
+            // console.log(reservas2);
             for(x=0;x<reservas2.length;x++){
               if(reservas2[x].ID_RESERVA!=='undefined'){
                 if(reservas2[x].ESTATUS == 'Confirmed'){
@@ -55,7 +78,7 @@ $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
 $.post("/consultarCoches",{id_usuario:usuario.ID_USUARIO},function(result){
       vehiculos = result.vehiculos;
       var tabla = "vehiculos";
-      console.log(vehiculos);
+      // console.log(vehiculos);
       for(i=0; i < vehiculos.length ;i++){
         $("#tabla_my_vehicles").append('<tr><th scope="row">' + vehiculos[i].ID_VEHICULO + '</th><td>' + vehiculos[i].MARCA + '</td><td>' + vehiculos[i].ANIO + '</td><td>' + vehiculos[i].PLACA + '</td><td> ' + vehiculos[i].COLOR + '</td><td>' +'</td><td><p><a class="btn btn-danger" onclick="EliminarObjeto(3,' + vehiculos[i].ID_VEHICULO + '); return false" href="#" role="button">Delete</a></td></tr>');
     }
@@ -64,11 +87,21 @@ $.post("/consultarCoches",{id_usuario:usuario.ID_USUARIO},function(result){
 $.post("/consultarSpots",{id_usuario:usuario.ID_USUARIO},function(result){
       spots = result.spots;
       var tabla = "spots";
-      console.log(spots);
+      // console.log(spots);
       for(i=0; i < spots.length ;i++){
         $("#tabla_my_spots").append('<tr><th scope="row">' + spots[i].ID_SPOT + '</th><td>' + spots[i].DIRECCION + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + spots[i].ID_SPOT + '); return false" href="#" role="button">Delete</a></td></tr>');
     }
 });
+
+// $.post("/consultarAlertas",{id_usuario:usuario.ID_USUARIO},function(result){
+//       alerts = result.alerts;
+//       var tabla = "alerts";
+//       console.log(alerts);
+//       for(i=0; i < alerts.length ;i++){
+//         $("#tabla_alert_my_spots").append('<tr><th scope="row">' + alerts[i].ID_ALERT + '</th><td>' + alerts[i].DIRECCION + '</td>' + '<td><p><a class="btn btn-danger" onclick="EliminarObjeto(4,' + alerts[i].ID_SPOT + '); return false" href="#" role="button">Delete</a></td></tr>');
+//     }
+// });
+
 
 function AgregarNuevoVehiculo(){
   $("#input_usuario").val(usuario.NOMBRE + " "  + usuario.APELLIDO);
@@ -310,5 +343,30 @@ function resetImage(){
  $("#Estatus_carga").text("");
  $("#Estatus_carga2").text("");
  $("#Estatus_carga3").text("");
-}
+};
 
+function puerta(){
+  if(id_cerrado==1){
+    console.log("Abriendo Puerta")
+  } else if(id_cerrado==0){
+    console.log("Cerrando Puerta")
+  };
+
+  $.post("/AbrirCerrarPuerta",{"id_cerrado":id_cerrado},function(result){
+    resultado = result.resultado;
+    // console.log(resultado);
+    if(resultado=="Actualizado"&&id_cerrado==1){
+      id_cerrado = 0;
+      // console.log("Puerta Abierta satisfactoriamente");
+      $("#BotonPuerta").text("Close Door");
+      $("#BotonPuerta").removeClass("btn-warning").addClass("btn-danger");
+
+    } else if (resultado=="Actualizado"&&id_cerrado==0){
+      id_cerrado = 1;   
+      // console.log("Puerta Cerrada satisfactoriamente");
+      $("#BotonPuerta").text("Open Door");
+      $("#BotonPuerta").removeClass("btn-danger").addClass("btn-warning");
+
+    };
+  });
+}
