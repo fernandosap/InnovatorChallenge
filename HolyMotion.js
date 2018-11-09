@@ -640,7 +640,7 @@ app.post('/reservarRecast',function(req,res){
 			var HORA_INICIO = '00:10';
 			var HORA_FIN =  '20:30';
 			var UBICACION_DESC = spots[0].DIRECCION;
-			var fecha1 =  new Date(Date.now()-7200000-120000);
+			var fecha1 =  new Date(Date.now()-7200000-120000-14400000);
 			var fecha2 = new Date(Date.now()+99999999);
 			var PLACA =  '556HRZ';
 			var ESTATUS = "Pending";
