@@ -59,6 +59,11 @@ app.get('/Signin', function(req,res){
 	res.render('signup')
 });
 
+app.get('/Recast', function(req,res){
+	res.render('recast')
+});
+
+
 
 // INICIAN POSTS DE FUNCIONALIDAD -----------------------------
 
@@ -608,6 +613,9 @@ app.post('/reservarRecast',function(req,res){
 	id_spot = req.body.id_spot;
 	id_usuario_reserva = req.body.id_usuario_reserva
 
+	fecha1 = new Date(req.body.FECHA_INICIO + " " + req.body.HORA_INICIO);
+	fecha2 = new Date(req.body.FECHA_FIN+ " " + req.body.HORA_FIN);
+
 	o(url2).get(function(data){
 		if(typeof data.d.results[0] == 'undefined'){
 			numero_nuevo = 1;
@@ -623,29 +631,73 @@ app.post('/reservarRecast',function(req,res){
 			var spots = data.d.results;
 			console.log(spots);
 			url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+
+			var ID_RESERVA = numero_nuevo;
+			var ID_SPOT = id_spot;
+			var ID_USUARIO_RESERVA = Number(id_usuario_reserva);
+			var FECHA_INICIO = String(yyyymmdd());
+			var FECHA_FIN = String(yyyymmdd());
+			var HORA_INICIO = '00:10';
+			var HORA_FIN =  '20:30';
+			var UBICACION_DESC = spots[0].DIRECCION;
+			var fecha1 =  new Date(Date.now()-7200000-120000);
+			var fecha2 = new Date(Date.now()+99999999);
+			var PLACA =  '556HRZ';
+			var ESTATUS = "Pending";
+
 			info = {
 				ID_RESERVA: numero_nuevo,
 				ID_SPOT: id_spot,
 				ID_USUARIO_RESERVA: Number(id_usuario_reserva),
 				FECHA_INICIO: String(yyyymmdd()),
 				FECHA_FIN: String(yyyymmdd()),
-				HORA_INICIO: '01:10',
-				HORA_FIN: '14:30',
+				HORA_INICIO: '00:10',
+				HORA_FIN: '20:30',
 				UBICACION_DESC: spots[0].DIRECCION,
-				FECHA_RENT_INICIO: '/Date('+String(Date.now())+')/',
-				FECHA_RENT_FIN: '/Date('+String(Date.now()+10000)+')/',
-				PLACA: 'YOLO123',
+				FECHA_RENT_INICIO: '/Date('+String(fecha1.getTime())+')/',
+				FECHA_RENT_FIN: '/Date('+String(fecha2.getTime())+')/',
+				PLACA: '556HRZ',
 				ESTATUS: "Pending"
 			}
 			console.log(info);
 			o(url).post(info).save(function(data){
-				console.log(data.d)
-				res.send({
-			    replies: [{
-			      type: 'text',
-			      content: 'Your reservation was done successfully with the ID: ' + data.d.ID_RESERVA
-			    }]
-			  });   
+				console.log(data.d);
+
+				var options = {
+				method:'GET',
+				  url: 'https://innovator.authentication.eu10.hana.ondemand.com/oauth/token?grant_type=client_credentials',
+				  headers: {
+				    'Authorization': 'Basic c2ItY2RlMDc1NTQtNTI1Mi00OWFlLTk4NDItZTE5MzljZTNiYmY4IWI0MDM0fG5hLTQyMGFkZmM5LWY5NmUtNDA5MC1hNjUwLTAzODY5ODhiNjdlMCFiMTgzNjpWVytCazBabjJWa1k3Zi9PWHVTWFNxNng0ekE9'
+				  }
+				};
+
+				request(options,function(error,response,body){
+					console.log("TOKEN -----------------------------")
+					cuerpo = JSON.parse(body)
+					// post a blockchain
+
+					var options = {
+					method:'POST',
+					  url: 'https://hyperledger-fabric.cfapps.eu10.hana.ondemand.com/api/v1/chaincodes/2ddcc9f0-bdc0-4ef4-89b9-870622edcfb2-com-sap-icn-blockchain-holymotion-booking/latest/' + numero_nuevo,
+					  headers: {
+					    'Authorization': 'bearer ' + cuerpo.access_token,
+					    'Content-type': 'application/x-www-form-urlencoded'
+					  },
+					  form: 'placa='+ PLACA +'&idlugar='+ID_SPOT+'&fechahorainicio='+fecha1.toISOString()+'&fechahorafin='+fecha2.toISOString()+'&estatus='+ESTATUS+'&usuario=BrunoRaulGuerreroPadilla'
+					};
+
+					request(options,function(error,response,body){
+						console.log(options);
+						res.send({
+					    replies: [{
+					      type: 'text',
+					      content: 'Your reservation was done successfully with the ID: ' + data.d.ID_RESERVA
+					    }]
+					  });   
+
+					});
+
+				});
 			}, function(status, error){
 				res.send({
 				    replies: [{

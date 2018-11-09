@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Holy Motion!</title>
-    <meta name="viewport" content="initial-scale=1.0">
+    <meta name="viewport" content="width=device-width">
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="/css/MyAccount.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -479,6 +479,49 @@
     </div>
   </div>
 </div>
+
+<!-- modal de creacíon de vehiculo -->
+<!-- id de vehiculo, id de usuario, marca, anio, placa y el color -->
+
+<div class="modal fade" id="modalPlacasUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tituloModal">Info of the user.</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center" id="MensajeModalConfirmacion"> 
+          <p><h4>Bruno Raul Guerrero Padilla.</h4></p>
+
+          <img class="rounded-circle" src="https://dl.dropboxusercontent.com/s/q6afqwm9j19bqu8/0000.jpg" id="ImagenUsuario" alt="Generic placeholder image" width="140" height="140">
+
+           <p><h5>Direccion: </h5> 
+            <input id="input_usuario" type="text" value="Av Tamaulipas 1236 interior 507, Garcimarrero" name="Usuario" class="disabled" disabled>
+          </p>
+
+           <p><h5>Telefono: </h5> 
+            <input id="input_usuario" value="5548002790" type="text" name="Usuario" class="disabled" disabled>
+          </p>
+
+           <p><h5>Email: </h5> 
+            <input id="input_usuario" value="bruno.guerrero@sap.com" type="text" name="Usuario" class="disabled" disabled>
+          </p>
+
+           <p><h5>Ranking: </h5> 
+            <input id="input_usuario" value="Master Driver" type="text" name="Usuario" class="disabled" disabled>
+          </p>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
   </body>
 
 <script type="text/javascript" src="https://unpkg.com/popper.js@1.14.4/dist/umd/popper.js"></script>
@@ -570,8 +613,8 @@
 
 </script>
 
-<script src="/js/webchat.js"
-channelId="f6d81819-e26a-4e98-b071-57f9b93b21fb"
-token="69bfbba9b767522a218ebd8192860d24"
+<script src="https://cdn.recast.ai/webchat/webchat.js"
+channelId="44f8bdaf-27b7-4a6d-96dc-4ed2079af104"
+token="f0c4cc38a48ac8ce374f36a02c076888"
 id="recast-webchat"
 ></script>
