@@ -161,7 +161,7 @@ app.post('/ConfirmarObjeto', function(req, res){
 
 				var mailOptions = {
 				  from: 'holymotion.notifications@gmail.com',
-				  to: 'fernando.sanchez@sap.com',
+				  to: 'bruno.guerrero@sap.com',
 				  subject: 'Your reservation of the spot ' + reserva[0].UBICACION_DESC + ' in HolyMotion has been confirmed!',
 				  html: '<h2> Access your account at http://holymotionjs.cfapps.eu10.hana.ondemand.com/MyAccount in order to review your spot status. </h2>'
 				};
