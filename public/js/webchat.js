@@ -5,7 +5,7 @@ var recognizing =false;
 var recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition ||
 											window.msSpeechRecognition)
 																		
-recognition.lang = 'es-MX';
+recognition.lang = 'en-US';
 recognition.continuous = false;
 recognition.interimResults = true;
 recognition.maxAlternatives = 5;
@@ -100,7 +100,7 @@ function speakBot(t, type) {
 				var msg = new SpeechSynthesisUtterance();
 				msg.rate = 1;
 				msg.pitch = 1;
-				msg.lang = 'es-US';
+				msg.lang = 'en-US';
 
 				msg.onend = function(event) {
 					console.log('Speech finished in ' + event.elapsedTime + ' seconds.');
@@ -117,10 +117,19 @@ function speakBot(t, type) {
 					if(t.payload.messages[vvi].attachment.type === "card")
 					{
 							msg.text = t.payload.messages[vvi].attachment.content.title+". " + t.payload.messages[vvi].attachment.content.subtitle; 
-					}else if(t.payload.messages[vvi].attachment.type === "buttons" || t.payload.messages[vvi].attachment.type === "quickReplies" || t.payload.messages[vvi].attachment.type === "list")
+					}else if(t.payload.messages[vvi].attachment.type === "buttons" || t.payload.messages[vvi].attachment.type === "quickReplies" )
 					{
-							msg.text = t.payload.messages[vvi].attachment.content.elements[0].title+", "+ t.payload.messages[vvi].attachment.content.elements[1].title+", "+ t.payload.messages[vvi].attachment.content.elements[2].title
-								+", "+ t.payload.messages[vvi].attachment.content.elements[3].title+", "+ t.payload.messages[vvi].attachment.content.elements[4].title; 
+							console.log("entre if quick replies")
+							msg.text = t.payload.messages[vvi].attachment.content.title; 
+
+					}else if(t.payload.messages[vvi].attachment.type === "list")
+					{
+							var elemntSize = t.payload.messages[vvi].attachment.content.elements.length
+							msg.text = "";
+							msg.lang = 'es-US';
+							for(var i=0; i<elemntSize; i++)
+								msg.text += t.payload.messages[vvi].attachment.content.elements[i].title; 
+							
 					}
 					else if (t.payload.messages[vvi].attachment.content.length < 200 && t.payload.messages[vvi].attachment.type !== "picture" && t.payload.messages[vvi].attachment.type !== "card") {
 							msg.text = t.payload.messages[vvi].attachment.content; 
@@ -35493,6 +35502,9 @@ function speakBot(t, type) {
 			},
 			POLL_MESSAGES_SUCCESS: function(e, t) {
 				var n = t.payload;
+
+				console.log(t);
+				console.log(t.payload);
 				speakBot(t, "poll");
 				return (0, a.uniqWith)(function(e, t) {
 					return e.id === t.id
