@@ -7,7 +7,7 @@ var recognizing =false;
 var recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition ||
 											window.msSpeechRecognition)
 																		
-recognition.lang = 'en-US';
+recognition.lang = 'es-US';
 recognition.continuous = false;
 recognition.interimResults = true;
 recognition.maxAlternatives = 5;
@@ -102,7 +102,7 @@ function speakBot(t, type) {
 				var msg = new SpeechSynthesisUtterance();
 				msg.rate = 1;
 				msg.pitch = 1;
-				msg.lang = 'en-US';
+				msg.lang = 'es-US';
 
 				msg.onend = function(event) {
 					console.log('Speech finished in ' + event.elapsedTime + ' seconds.');
