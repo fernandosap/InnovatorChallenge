@@ -1,5 +1,7 @@
 /* FileDrop - Start*/
 
+// Bruneiro estuvo aquí 
+
 var submitFunction;
 var recognizing =false;
 var recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition ||
