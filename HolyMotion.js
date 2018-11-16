@@ -565,7 +565,7 @@ app.post('/consultarSpotsRecast',function(req,res){
 			            {
 			              "title": "Reserve",
 			              "type": "BUTTON_TYPE",
-			              "value": "Yes, I want to reserve the spot "  + spots[0].ID_SPOT,
+			              "value": "Quiero confirmar mi reserva en el lugar "  + spots[0].ID_SPOT,
 			            }
 			          ]
 			        },
@@ -577,7 +577,7 @@ app.post('/consultarSpotsRecast',function(req,res){
 			            {
 			              "title": "Reserve",
 			              "type": "BUTTON_TYPE",
-			              "value": "Yes, I want to reserve the spot "  + spots[1].ID_SPOT,
+			              "value": "Quiero confirmar mi reserva en el lugar "  + spots[1].ID_SPOT,
 			            }
 			          ]
 			        },
@@ -589,14 +589,14 @@ app.post('/consultarSpotsRecast',function(req,res){
 			            {
 			              "title": "Reserve",
 			              "type": "BUTTON_TYPE",
-			              "value": "Yes, I want to reserve the spot " + spots[2].ID_SPOT,
+			              "value": "Quiero confirmar mi reserva en el lugar " + spots[2].ID_SPOT,
 			            }
 			          ]
 			        }
 			      ],
 			      "buttons": [
 			        {
-			          "title": "Select a spot to reserve",
+			          "title": "Selecciona un lugar para estacionarte",
 			          "type": "BUTTON_TYPE",
 			          "value": ""
 			        }
@@ -691,7 +691,7 @@ app.post('/reservarRecast',function(req,res){
 						res.send({
 					    replies: [{
 					      type: 'text',
-					      content: 'Your reservation was done successfully with the ID: ' + data.d.ID_RESERVA
+					      content: 'Tu reserva se realizó de manera satisfactoria con el ID ' + data.d.ID_RESERVA
 					    }]
 					  });   
 
