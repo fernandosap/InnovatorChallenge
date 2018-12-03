@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 o().config({
   // format: 'json',
   username: 'i848070', 	// the basic auth username
-  password: 'WelcomeWelcome1.',
+  password: 'Welcome.',
   isWithCredentials: true
 });
 
@@ -69,7 +69,7 @@ app.get('/Recast', function(req,res){
 
 app.post('/consultarVehiculos',function(req,res){
 	usuario = req.body.usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + usuario;
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + usuario;
 	o(url).get(function(data){
 		if(typeof data.d.results[0] !== 'undefined'){
 			console.log(data.d.results);
@@ -84,7 +84,7 @@ app.post('/consultarVehiculos',function(req,res){
 
 app.post('/consultarCoches', function(req,res){
 	id_usuario = req.body.id_usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + id_usuario;
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$filter=ID_USUARIO eq " + id_usuario;
 	o(url).get(function(data){
 		vehiculos = data.d.results;
 		console.log("El resultado de consultar vehiculos: " + vehiculos);
@@ -100,7 +100,7 @@ app.post('/EliminarObjeto', function(req, res){
 
 	// opciones para configuración del DELETE
 	var options = {
-	    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/"+ tabla +"(" + id_objeto +")",
+	    url: "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/"+ tabla +"(" + id_objeto +")",
 	    method: 'DELETE',
 	    auth: {
 	    'user': 'i848070',
@@ -126,12 +126,12 @@ app.post('/ConfirmarObjeto', function(req, res){
 	console.log("El objeto a confirmar es: " + req.body.id_objeto);
 	id_objeto = req.body.id_objeto;
 
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_RESERVA eq " + id_objeto
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_RESERVA eq " + id_objeto
 	o(url).get(function(data){
 		reserva = data.d.results;
 		// opciones para configuración del DELETE
 		var options = {
-		    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/"+ tabla +"(" + id_objeto +")",
+		    url: "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/"+ tabla +"(" + id_objeto +")",
 		    method: 'PUT',
 		    auth: {
 		    'user': 'i848070',
@@ -189,12 +189,12 @@ app.post('/ActualizarImagenes', function(req, res){
 	id_usuario = req.body.id_usuario;
 	console.log(imagenes);
 
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=ID_USUARIO eq " + id_usuario
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=ID_USUARIO eq " + id_usuario
 	o(url).get(function(data){
 		usuario = data.d.results;
 		// opciones para configuración del DELETE
 		var options = {
-		    url: "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios(" + id_usuario +")",
+		    url: "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios(" + id_usuario +")",
 		    method: 'PUT',
 		    auth: {
 		    'user': 'i848070',
@@ -234,12 +234,12 @@ app.post('/ActualizarImagenes', function(req, res){
 
 app.post('/CrearSpot', function(req,res){
 	// id de vehiculo, id de usuario, marca, anio, placa y el color
-	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$select=ID_SPOT&$orderby=ID_SPOT%20desc&$top=1"
+	url2 = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$select=ID_SPOT&$orderby=ID_SPOT%20desc&$top=1"
 	o(url2).get(function(data){
 		console.log(data.d.results[0].ID_SPOT);
 		numero_nuevo = Number(data.d.results[0].ID_SPOT) + 1;
 		console.log(numero_nuevo);
-		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots";
+		url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots";
 			info = {
 				"ID_SPOT": numero_nuevo,
 				"ID_USUARIO": Number(req.body.ID_USUARIO),
@@ -257,12 +257,12 @@ app.post('/CrearSpot', function(req,res){
 });
 
 app.post('/CrearCoche', function(req,res){
-	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$select=ID_VEHICULO&$orderby=ID_VEHICULO%20desc&$top=1"
+	url2 = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos?$select=ID_VEHICULO&$orderby=ID_VEHICULO%20desc&$top=1"
 	o(url2).get(function(data){
 		console.log(data.d.results[0].ID_VEHICULO);
 		numero_nuevo = Number(data.d.results[0].ID_VEHICULO) + 1;
 		console.log(numero_nuevo);
-		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos";
+		url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/vehiculos";
 			info = {
 				"ID_VEHICULO": numero_nuevo,
 				"ID_USUARIO": Number(req.body.info.ID_USUARIO),
@@ -285,7 +285,7 @@ app.post('/CrearCoche', function(req,res){
 
 app.post('/consultarReservas',function(req,res){
 id_usuario = req.body.id_usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_USUARIO_RESERVA eq " + id_usuario
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_USUARIO_RESERVA eq " + id_usuario
 	o(url).get(function(data){
 		reservas = data.d.results;
 		console.log("El resultado de consultar reservas: " + reservas);
@@ -296,7 +296,7 @@ id_usuario = req.body.id_usuario;
 app.post('/consultarReservasPorSpot',function(req,res){
 spot = req.body.spot_id;
 console.log(spot);
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_SPOT eq " + spot
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$filter=ID_SPOT eq " + spot
 	o(url).get(function(data){
 		reservas = data.d.results;
 		console.log("El resultado de reservas por spot " + reservas);
@@ -306,7 +306,7 @@ console.log(spot);
 
 app.post('/consultarSpots',function(req,res){
 	id_usuario = req.body.id_usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$filter=ID_USUARIO eq " + id_usuario
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$filter=ID_USUARIO eq " + id_usuario
 	o(url).get(function(data){
 		spots = data.d.results;
 		console.log(spots);
@@ -316,7 +316,7 @@ app.post('/consultarSpots',function(req,res){
 
 app.post('/consultarAlertas',function(req,res){
 	id_spot = req.body.id_spot;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/alertasspots?$filter=ID_SPOT eq " + id_spot;
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/alertasspots?$filter=ID_SPOT eq " + id_spot;
 	o(url).get(function(data){
 		alertas = data.d.results;
 		console.log(alertas);
@@ -327,8 +327,8 @@ app.post('/consultarAlertas',function(req,res){
 app.post('/SignUp', function(req,res){
 	array = req.body.signup_array;
 	email = array[2];
-	url_usuarios = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios";
-	url_busqueda = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=EMAIL eq '" + email + "'"
+	url_usuarios = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios";
+	url_busqueda = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=EMAIL eq '" + email + "'"
 	console.log(array);
 	var respuesta ="";
 	console.log("Buscando usuario: " + email)
@@ -393,7 +393,7 @@ app.post('/validarLogin', function(req,res){
 	console.log(email);
 	console.log(pass);
 
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=EMAIL eq '" + email + "'"
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=EMAIL eq '" + email + "'"
 	o(url).get(function(data) {
 		if(typeof data.d.results[0] !== 'undefined'){
 			var user = {
@@ -422,7 +422,7 @@ app.post('/validarLogin', function(req,res){
 });
 
 app.post('/crearReserva',function(req,res){
-	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$select=ID_RESERVA&$orderby=ID_RESERVA%20desc&$top=1"
+	url2 = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$select=ID_RESERVA&$orderby=ID_RESERVA%20desc&$top=1"
 
 	o(url2).get(function(data){
 		if(typeof data.d.results[0] == 'undefined'){
@@ -432,7 +432,7 @@ app.post('/crearReserva',function(req,res){
 			numero_nuevo = Number(data.d.results[0].ID_RESERVA) + 1;
 			console.log(numero_nuevo);
 		};
-		url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+		url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
 
 		fecha1 = new Date(req.body.FECHA_INICIO + " " + req.body.HORA_INICIO);
 		fecha2 = new Date(req.body.FECHA_FIN+ " " + req.body.HORA_FIN);
@@ -497,7 +497,7 @@ app.post('/crearReserva',function(req,res){
 });
 
 app.post('/contarSpots',function(req,res){
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots"
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots"
 	o(url).get(function(data) {
 				numero_nuevo = Number(data.d.results.length);
 				res.send({"contador":numero_nuevo,"spots":data});
@@ -505,7 +505,7 @@ app.post('/contarSpots',function(req,res){
 });
 
 app.post('/nuevoIDReserva',function(req,res){
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas"
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas"
 	o(url).get(function(data) {
 				numero_nuevo = Number(data.d.results.length);
 				res.send({"ultima_reserva":numero_nuevo,"reservas":data});
@@ -514,7 +514,7 @@ app.post('/nuevoIDReserva',function(req,res){
 
 app.post('/obtenerImagenesUsuario', function(req,res){
 	id_usuario = req.body.id_usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=ID_USUARIO eq " + id_usuario
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/usuarios?$filter=ID_USUARIO eq " + id_usuario
 	o(url).get(function(data){
 		usuario = data.d.results[0];
 		console.log(usuario);
@@ -525,7 +525,7 @@ app.post('/obtenerImagenesUsuario', function(req,res){
 });
 
 app.post('/ConsultarEstatusPuerta',function(req,res){
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/checkparking/checkdoorstatus.xsjs?ir=1&is=1";
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/checkparking/checkdoorstatus.xsjs?ir=1&is=1";
 	o(url).get(function(data){
 		estatus = data;
 		console.log("La puerta se encuentra en estatus: " + estatus);
@@ -536,7 +536,7 @@ app.post('/ConsultarEstatusPuerta',function(req,res){
 app.post('/AbrirCerrarPuerta', function(req,res){
 	abrirocerrar = req.body.id_cerrado
 	console.log("Valor a colocar en la tabla de la puerta = " + abrirocerrar);
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/checkparking/changedoorstatus.xsjs?ir=1&is=1&es=" + abrirocerrar;
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/checkparking/changedoorstatus.xsjs?ir=1&is=1&es=" + abrirocerrar;
 	o(url).get(function(data){
 		console.log(data);
 		estatus = data;
@@ -548,7 +548,7 @@ app.post('/AbrirCerrarPuerta', function(req,res){
 
 app.post('/consultarSpotsRecast',function(req,res){
 	id_usuario = req.body.id_usuario;
-	url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$top(3)"
+	url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$top(3)"
 	o(url).get(function(data){
 		spots = data.d.results;
 		console.log(spots);
@@ -608,7 +608,7 @@ app.post('/consultarSpotsRecast',function(req,res){
 })
 
 app.post('/reservarRecast',function(req,res){
-	url2 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$select=ID_RESERVA&$orderby=ID_RESERVA%20desc&$top=1"
+	url2 = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas?$select=ID_RESERVA&$orderby=ID_RESERVA%20desc&$top=1"
 
 	id_spot = req.body.id_spot;
 	id_usuario_reserva = req.body.id_usuario_reserva
@@ -625,12 +625,12 @@ app.post('/reservarRecast',function(req,res){
 			console.log(numero_nuevo);
 		};
 
-		url3 = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$filter=ID_SPOT eq " + id_spot
+		url3 = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/spots?$filter=ID_SPOT eq " + id_spot
 
 		o(url3).get(function(data){
 			var spots = data.d.results;
 			console.log(spots);
-			url = "https://hanadblaci1355a05c4.us2.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
+			url = "https://xs01b14ae55f1.us1.hana.ondemand.com/HOLY_MOTION/usuarios.xsodata/reservas";
 
 			var ID_RESERVA = numero_nuevo;
 			var ID_SPOT = id_spot;
