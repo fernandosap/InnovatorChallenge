@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 o().config({
   // format: 'json',
   username: 'i848070', 	// the basic auth username
-  password: 'Welcome.',
+  password: 'Welcome1.',
   isWithCredentials: true
 });
 
@@ -104,7 +104,7 @@ app.post('/EliminarObjeto', function(req, res){
 	    method: 'DELETE',
 	    auth: {
 	    'user': 'i848070',
-	    'pass': 'WelcomeWelcome1.'
+	    'pass': 'Welcome1.'
 		}
 	};
 
@@ -135,7 +135,7 @@ app.post('/ConfirmarObjeto', function(req, res){
 		    method: 'PUT',
 		    auth: {
 		    'user': 'i848070',
-		    'pass': 'WelcomeWelcome1.'
+		    'pass': 'Welcome1.'
 			},
 			json: {
 				ID_RESERVA: reserva[0].ID_RESERVA,
@@ -198,7 +198,7 @@ app.post('/ActualizarImagenes', function(req, res){
 		    method: 'PUT',
 		    auth: {
 		    'user': 'i848070',
-		    'pass': 'WelcomeWelcome1.'
+		    'pass': 'Welcome1.'
 			},
 			json: {
 				ID_USUARIO: usuario[0].ID_USUARIO,
